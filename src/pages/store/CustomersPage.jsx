@@ -209,6 +209,8 @@ export default function CustomersPage({ user }) {
   const [modal, setModal] = useState(null)
   const [resetModal, setResetModal] = useState(null)
   const [search, setSearch] = useState('')
+  const [activeFilter, setActiveFilter] = useState('')
+  const [salesFilter, setSalesFilter] = useState('')
   const [summary, setSummary] = useState(null)
 
   const canManage = ['admin', 'sales'].includes(user?.role)

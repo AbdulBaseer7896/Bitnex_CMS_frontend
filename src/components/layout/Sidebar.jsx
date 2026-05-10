@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback, createContext, useContext } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import api from '../../api/client'
 import BitnexLogo from '../common/BitnexLogo'
 import {
   HiOutlineHome, HiOutlineUsers, HiOutlineClipboardList,
@@ -8,53 +9,49 @@ import {
   HiOutlineDocumentReport, HiOutlineMenuAlt2, HiX,
   HiOutlineShieldCheck, HiOutlineUserAdd, HiOutlineCollection,
   HiOutlineClock, HiOutlineCog, HiOutlineChevronDown,
-  HiOutlineDatabase, HiOutlineCreditCard, HiOutlineShoppingBag,
-  HiOutlinePhone, HiOutlineUserCircle,
+  HiOutlineDatabase, HiOutlineCreditCard, HiOutlinePhone,
+  HiOutlineCash, HiOutlineChartPie,
 } from 'react-icons/hi'
 import { RiTeamLine } from 'react-icons/ri'
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   NAV CONFIG
-   DAT Accounts + Dialer Accounts are now managed in Settings → tabs
-   Store section shows: Products | Customers | DAT Seats | Dialer Seats | Transactions
-───────────────────────────────────────────────────────────────────────────── */
 const navConfig = {
   admin: [
-    { to:'/dashboard',          icon:HiOutlineHome,          label:'Dashboard' },
-    { to:'/admin/users',        icon:HiOutlineUsers,         label:'Users' },
-    { to:'/hr/employees',       icon:RiTeamLine,             label:'Employees' },
-    { to:'/hr/leaves',          icon:HiOutlineClipboardList, label:'Leaves' },
-    { to:'/attendance',         icon:HiOutlineClock,         label:'Attendance' },
-    { to:'/salary',             icon:HiOutlineCurrencyDollar,label:'Salary' },
-    { to:'/accounts/expenses',  icon:HiOutlineDocumentReport,label:'Expenses' },
-    { to:'/sales',              icon:HiOutlineChartBar,      label:'Sales Records' },
-    { divider:'Store' },
-    { to:'/store/customers',    icon:HiOutlineUsers,         label:'Customers' },
-    { to:'/store/dat',          icon:HiOutlineDatabase,      label:'DAT One Seats' },
-    { to:'/store/dialers',      icon:HiOutlinePhone,         label:'Dialer Seats' },
-    { to:'/store/transactions', icon:HiOutlineCreditCard,    label:'Transactions' },
+    { to:'/dashboard',         icon:HiOutlineHome,          label:'Dashboard' },
+    { to:'/admin/users',       icon:HiOutlineUsers,         label:'Users' },
+    { to:'/hr/employees',      icon:RiTeamLine,             label:'Employees' },
+    { to:'/hr/leaves',         icon:HiOutlineClipboardList, label:'Leaves' },
+    { to:'/attendance',        icon:HiOutlineClock,         label:'Attendance' },
+    { to:'/salary',            icon:HiOutlineCurrencyDollar,label:'Salary' },
+    { to:'/accounts/expenses', icon:HiOutlineDocumentReport,label:'Expenses' },
+    { divider:'DAT One Store' },
+    { to:'/store/customers',   icon:HiOutlineUsers,         label:'Customers' },
+    { to:'/store/dat',         icon:HiOutlineDatabase,      label:'DAT One' },
+    { to:'/store/payments',    icon:HiOutlineCreditCard,    label:'Payments' },
+    { to:'/store/dat-expenses',icon:HiOutlineCash,          label:'DAT Expenses' },
+    { to:'/store/dialers',     icon:HiOutlinePhone,         label:'Dialers' },
+    { to:'/store/report',      icon:HiOutlineChartPie,      label:'Monthly Report' },
     { divider:'System' },
-    { to:'/admin/activity',     icon:HiOutlineCollection,    label:'Audit Logs' },
+    { to:'/admin/activity',    icon:HiOutlineCollection,    label:'Audit Logs' },
   ],
   hr: [
-    { to:'/dashboard',        icon:HiOutlineHome,           label:'Dashboard' },
-    { to:'/hr/employees',     icon:RiTeamLine,              label:'Employees' },
-    { to:'/hr/leaves',        icon:HiOutlineClipboardList,  label:'Leaves' },
-    { to:'/hr/allowances',    icon:HiOutlineDocumentReport, label:'Leave Allowances' },
-    { to:'/attendance',       icon:HiOutlineClock,          label:'Attendance' },
-    { to:'/salary',           icon:HiOutlineCurrencyDollar, label:'Salary' },
-    { to:'/hr/add-employee',  icon:HiOutlineUserAdd,        label:'Add Employee' },
+    { to:'/dashboard',       icon:HiOutlineHome,           label:'Dashboard' },
+    { to:'/hr/employees',    icon:RiTeamLine,              label:'Employees' },
+    { to:'/hr/leaves',       icon:HiOutlineClipboardList,  label:'Leaves' },
+    { to:'/hr/allowances',   icon:HiOutlineDocumentReport, label:'Leave Allowances' },
+    { to:'/attendance',      icon:HiOutlineClock,          label:'Attendance' },
+    { to:'/salary',          icon:HiOutlineCurrencyDollar, label:'Salary' },
+    { to:'/hr/add-employee', icon:HiOutlineUserAdd,        label:'Add Employee' },
   ],
   accountant: [
-    { to:'/dashboard',          icon:HiOutlineHome,           label:'Dashboard' },
-    { to:'/salary',             icon:HiOutlineCurrencyDollar, label:'Salary' },
-    { to:'/accounts/expenses',  icon:HiOutlineDocumentReport, label:'Expenses' },
-    { to:'/accounts/reports',   icon:HiOutlineChartBar,       label:'Reports' },
-    { divider:'Store' },
-    { to:'/store/customers',    icon:HiOutlineUsers,          label:'Customers' },
-    { to:'/store/dat',          icon:HiOutlineDatabase,       label:'DAT One Seats' },
-    { to:'/store/dialers',      icon:HiOutlinePhone,          label:'Dialer Seats' },
-    { to:'/store/transactions', icon:HiOutlineCreditCard,     label:'Transactions' },
+    { to:'/dashboard',         icon:HiOutlineHome,           label:'Dashboard' },
+    { to:'/salary',            icon:HiOutlineCurrencyDollar, label:'Salary' },
+    { to:'/accounts/expenses', icon:HiOutlineDocumentReport, label:'Expenses' },
+    { divider:'DAT One Store' },
+    { to:'/store/customers',   icon:HiOutlineUsers,          label:'Customers' },
+    { to:'/store/dat',         icon:HiOutlineDatabase,       label:'DAT One' },
+    { to:'/store/payments',    icon:HiOutlineCreditCard,     label:'Payments' },
+    { to:'/store/dat-expenses',icon:HiOutlineCash,           label:'DAT Expenses' },
+    { to:'/store/report',      icon:HiOutlineChartPie,       label:'Monthly Report' },
   ],
   employee: [
     { to:'/dashboard',          icon:HiOutlineHome,           label:'Dashboard' },
@@ -63,30 +60,28 @@ const navConfig = {
     { to:'/employee/payslips',  icon:HiOutlineCurrencyDollar, label:'My Payslips' },
   ],
   sales: [
-    { to:'/dashboard',          icon:HiOutlineHome,          label:'Dashboard' },
-    { to:'/sales',              icon:HiOutlineChartBar,      label:'Sales Records' },
-    { to:'/attendance',         icon:HiOutlineClock,         label:'Attendance' },
-    { divider:'Store' },
-    { to:'/store/customers',    icon:HiOutlineUsers,         label:'Customers' },
-    { to:'/store/dat',          icon:HiOutlineDatabase,      label:'DAT One Seats' },
-    { to:'/store/dialers',      icon:HiOutlinePhone,         label:'Dialer Seats' },
-    { to:'/store/transactions', icon:HiOutlineCreditCard,    label:'Transactions' },
-    { to:'/accounts/expenses',  icon:HiOutlineDocumentReport,label:'Expenses' },
+    { to:'/dashboard',         icon:HiOutlineHome,          label:'Dashboard' },
+    { to:'/attendance',        icon:HiOutlineClock,         label:'Attendance' },
+    { divider:'DAT One Store' },
+    { to:'/store/customers',   icon:HiOutlineUsers,         label:'Customers' },
+    { to:'/store/dat',         icon:HiOutlineDatabase,      label:'DAT One' },
+    { to:'/store/payments',    icon:HiOutlineCreditCard,    label:'Payments' },
+    { to:'/store/dat-expenses',icon:HiOutlineCash,          label:'DAT Expenses' },
+    { to:'/store/dialers',     icon:HiOutlinePhone,         label:'Dialers' },
+    { to:'/store/report',      icon:HiOutlineChartPie,      label:'Monthly Report' },
   ],
   customer: [
     { to:'/dashboard',      icon:HiOutlineHome,       label:'Dashboard' },
     { to:'/store/dat',      icon:HiOutlineDatabase,   label:'My DAT Seats' },
     { to:'/store/dialers',  icon:HiOutlinePhone,      label:'My Dialers' },
+    { to:'/store/payments', icon:HiOutlineCreditCard, label:'My Payments' },
   ],
 }
 
 const roleColors = {
-  admin:      'bg-[#4BBFBF]/20 text-[#4BBFBF]',
-  hr:         'bg-violet-500/20 text-violet-400',
-  accountant: 'bg-emerald-500/20 text-emerald-400',
-  employee:   'bg-sky-500/20 text-sky-400',
-  sales:      'bg-orange-500/20 text-orange-400',
-  customer:   'bg-pink-500/20 text-pink-400',
+  admin:'bg-[#4BBFBF]/20 text-[#4BBFBF]', hr:'bg-violet-500/20 text-violet-400',
+  accountant:'bg-emerald-500/20 text-emerald-400', employee:'bg-sky-500/20 text-sky-400',
+  sales:'bg-orange-500/20 text-orange-400', customer:'bg-pink-500/20 text-pink-400',
 }
 
 function UserFooter({ user, onLogout }) {
@@ -135,7 +130,12 @@ function UserFooter({ user, onLogout }) {
   )
 }
 
+// ── Pending payments context ──────────────────────────────────────────────────
+const PendingCtx = createContext({ dat: 0, dialer: 0, total: 0 })
+export function usePendingClaims() { return useContext(PendingCtx) }
+
 function NavList({ items, onNavigate }) {
+  const pending = useContext(PendingCtx)
   return (
     <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5">
       {items.map((item, idx) => {
@@ -147,6 +147,8 @@ function NavList({ items, onNavigate }) {
           )
         }
         const Icon = item.icon
+        const isPayments = item.to === '/store/payments'
+        const badge = isPayments && pending.total > 0 ? pending.total : 0
         return (
           <NavLink key={item.to} to={item.to} onClick={onNavigate}
             className={({ isActive }) =>
@@ -157,7 +159,13 @@ function NavList({ items, onNavigate }) {
               }`
             }>
             <Icon className="w-[18px] h-[18px] flex-shrink-0"/>
-            <span className="truncate">{item.label}</span>
+            <span className="truncate flex-1">{item.label}</span>
+            {badge > 0 && (
+              <span className="flex-shrink-0 min-w-[20px] h-5 px-1.5 rounded-full text-[11px] font-bold flex items-center justify-center"
+                style={{ background: 'rgba(234,179,8,0.25)', color: '#fbbf24', border: '1px solid rgba(234,179,8,0.3)' }}>
+                {badge}
+              </span>
+            )}
           </NavLink>
         )
       })}
@@ -168,11 +176,33 @@ function NavList({ items, onNavigate }) {
 export default function Sidebar() {
   const { user, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [pending, setPending] = useState({ dat: 0, dialer: 0, total: 0 })
   const items = navConfig[user?.role] || navConfig.employee
+
+  const fetchPending = useCallback(async () => {
+    const roles = ['admin','sales','accountant','customer']
+    if (!user || !roles.includes(user.role)) return
+    try {
+      const [datRes, dialerRes] = await Promise.all([
+        api.get('/store/payment-claims/?status=pending'),
+        api.get('/store/dialer-payment-claims/?status=pending'),
+      ])
+      const dat = (Array.isArray(datRes.data) ? datRes.data : datRes.data.results || []).length
+      const dialer = (Array.isArray(dialerRes.data) ? dialerRes.data : dialerRes.data.results || []).length
+      setPending({ dat, dialer, total: dat + dialer })
+    } catch {}
+  }, [user])
+
+  useEffect(() => {
+    fetchPending()
+    // Poll every 60 seconds
+    const timer = setInterval(fetchPending, 60000)
+    return () => clearInterval(timer)
+  }, [fetchPending])
 
   const SidebarContent = ({ onNavigate }) => (
     <div className="flex flex-col h-full">
-      <div className="px-5 py-5 flex-shrink-0"><BitnexLogo size="sm"/></div>
+      <div className="px-5 py-5 flex-shrink-0"><BitnexLogo size={36} showText={true}/></div>
       <div className="px-4 pb-3 flex-shrink-0">
         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold capitalize ${roleColors[user?.role]||roleColors.employee}`}>
           <HiOutlineShieldCheck className="w-3 h-3"/>
@@ -186,6 +216,7 @@ export default function Sidebar() {
   )
 
   return (
+    <PendingCtx.Provider value={pending}>
     <>
       <button onClick={() => setMobileOpen(true)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-xl text-slate-400 hover:text-white transition-colors"
@@ -211,5 +242,6 @@ export default function Sidebar() {
         <SidebarContent onNavigate={undefined}/>
       </aside>
     </>
+    </PendingCtx.Provider>
   )
 }
