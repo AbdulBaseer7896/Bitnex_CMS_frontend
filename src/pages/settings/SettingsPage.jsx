@@ -106,7 +106,7 @@ function DepartmentsTab() {
   const [adding, setAdding] = useState(false)
 
   useEffect(() => {
-    api.get('/core/departments/').then(r => setDepts(r.data)).catch(()=>{}).finally(()=>setLoading(false))
+    api.get('/core/departments/').then(r => setDepts(Array.isArray(r.data) ? r.data : r.data.results || [])).catch(()=>{}).finally(()=>setLoading(false))
   }, [])
 
   const add = async () => {
@@ -460,14 +460,13 @@ function DialerAccountsTab() {
       if (typeFilter) q.push(`dialer_type=${typeFilter}`)
       if (statusFilter) q.push(`status=${statusFilter}`)
       const qs = q.length ? `?${q.join('&')}` : ''
-      const [subRes, custRes, prodRes] = await Promise.all([
+      const [subRes, custRes] = await Promise.all([
         api.get(`/store/dialer-subscriptions/${qs}`),
         api.get('/store/customers/'),
-        api.get('/store/products/?type=dialer'),
       ])
       setSubs(Array.isArray(subRes.data) ? subRes.data : subRes.data.results || [])
       setCustomers(Array.isArray(custRes.data) ? custRes.data : custRes.data.results || [])
-      setProducts(Array.isArray(prodRes.data) ? prodRes.data : prodRes.data.results || [])
+      setProducts([])
     } catch { toast.error('Failed to load') }
     finally { setLoading(false) }
   }, [typeFilter, statusFilter])

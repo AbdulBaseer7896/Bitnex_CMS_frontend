@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../../api/client'
 import toast from 'react-hot-toast'
 import {
@@ -7,6 +8,7 @@ import {
   HiOutlineSearch, HiOutlinePencil, HiOutlineX, HiOutlinePlus,
   HiOutlineWifi, HiOutlineLocationMarker,
   HiOutlineLockClosed, HiOutlineLockOpen, HiOutlineCheckCircle,
+  HiOutlineSwitchHorizontal, HiOutlineArrowRight,
 } from 'react-icons/hi'
 
 const TEAL = '#4BBFBF'
@@ -105,7 +107,8 @@ function BulkAssignModal({ selectedUsers, customers, onClose, onSaved }) {
 }
 
 // ── Edit existing seat ────────────────────────────────────────────────────────
-function EditSeatModal({ seat, onClose, onSaved }) {
+function EditSeatModal({ seat, customers, onClose, onSaved }) {
+  const [mode, setMode] = useState(seat._openMode || 'edit') // 'edit' | 'reassign'
   const [form, setForm] = useState({
     monthly_price: seat.monthly_price || '',
     currency: seat.currency || 'PKR',
@@ -115,6 +118,8 @@ function EditSeatModal({ seat, onClose, onSaved }) {
     is_active: seat.is_active ?? true,
     notes: seat.notes || '',
   })
+  const [newCustomer, setNewCustomer] = useState('')
+  const [newPrice, setNewPrice] = useState(seat.monthly_price || '')
   const [saving, setSaving] = useState(false)
   const f = (k, v) => setForm(p => ({ ...p, [k]: v }))
 
@@ -123,59 +128,159 @@ function EditSeatModal({ seat, onClose, onSaved }) {
     try {
       await api.patch('/store/customer-seats/' + seat.id + '/', form)
       toast.success('Seat updated'); onSaved(); onClose()
-    } catch { toast.error('Failed') } finally { setSaving(false) }
+    } catch { toast.error('Failed to update seat') } finally { setSaving(false) }
+  }
+
+  const reassign = async () => {
+    if (!newCustomer) return toast.error('Select a customer to reassign to')
+    if (newCustomer === String(seat.customer)) return toast.error('Same customer selected')
+    setSaving(true)
+    try {
+      await api.delete('/store/customer-seats/' + seat.id + '/')
+      await api.post('/store/customer-seats/', {
+        customer: newCustomer,
+        mongo_user: seat.mongo_user,
+        monthly_price: parseFloat(newPrice) || 0,
+        currency: form.currency,
+        start_date: form.start_date || null,
+        expiry_date: form.expiry_date || null,
+        reminder_date: form.reminder_date || null,
+        is_active: form.is_active,
+        notes: form.notes,
+      })
+      const cname = customers.find(c => String(c.id) === String(newCustomer))?.contact_person || 'new customer'
+      toast.success(seat.mongo_user_name + ' reassigned to ' + cname)
+      onSaved(); onClose()
+    } catch (e) {
+      toast.error(e.response?.data?.non_field_errors?.[0] || e.response?.data?.detail || 'Reassign failed')
+    } finally { setSaving(false) }
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.75)' }}>
       <div className="glass-light rounded-2xl w-full max-w-md" style={{ border: '1px solid rgba(75,191,191,0.25)' }}>
         <div className="flex items-center justify-between p-5 border-b border-white/10">
-          <h3 className="text-white font-bold">Edit Seat</h3>
+          <div>
+            <h3 className="text-white font-bold">{mode === 'edit' ? 'Edit Seat' : 'Reassign Seat'}</h3>
+            <p className="text-slate-500 text-xs mt-0.5">
+              <span className="text-white font-medium">{seat.mongo_user_name}</span>
+              <span className="text-slate-500"> currently: </span>
+              <span className="text-[#4BBFBF]">{seat.customer_name}</span>
+            </p>
+          </div>
           <button onClick={onClose}><HiOutlineX className="w-5 h-5 text-slate-400" /></button>
         </div>
-        <div className="p-5 space-y-3">
-          <div className="text-slate-400 text-sm mb-2">
-            <span className="text-white font-medium">{seat.mongo_user_name}</span> → <span className="text-[#4BBFBF]">{seat.customer_name}</span>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="col-span-2">
-              <label className="text-slate-400 text-xs mb-1 block">Monthly Price</label>
-              <input type="number" value={form.monthly_price} onChange={e => f('monthly_price', e.target.value)} className={inp} />
+
+        <div className="flex gap-1 m-4 mb-0 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }}>
+          <button onClick={() => setMode('edit')}
+            className={'flex-1 py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1.5 ' + (mode === 'edit' ? 'text-[#4BBFBF]' : 'text-slate-400 hover:text-white')}
+            style={mode === 'edit' ? { background: 'rgba(75,191,191,0.12)', border: '1px solid rgba(75,191,191,0.2)' } : {}}>
+            <HiOutlinePencil className="w-3.5 h-3.5" /> Edit Pricing & Dates
+          </button>
+          <button onClick={() => setMode('reassign')}
+            className={'flex-1 py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-1.5 ' + (mode === 'reassign' ? 'text-orange-400' : 'text-slate-400 hover:text-white')}
+            style={mode === 'reassign' ? { background: 'rgba(249,115,22,0.12)', border: '1px solid rgba(249,115,22,0.2)' } : {}}>
+            <HiOutlineSwitchHorizontal className="w-3.5 h-3.5" /> Reassign Customer
+          </button>
+        </div>
+
+        {mode === 'edit' && (
+          <div className="p-5 space-y-3">
+            <div className="grid grid-cols-3 gap-3">
+              <div className="col-span-2">
+                <label className="text-slate-400 text-xs mb-1 block">Monthly Price</label>
+                <input type="number" value={form.monthly_price} onChange={e => f('monthly_price', e.target.value)} className={inp} />
+              </div>
+              <div>
+                <label className="text-slate-400 text-xs mb-1 block">Currency</label>
+                <select value={form.currency} onChange={e => f('currency', e.target.value)} className={inp}>
+                  {['PKR','USD','GBP','EUR','AED'].map(c => <option key={c} value={c} className="bg-[#0e1420]">{c}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {[['start_date','Start'],['expiry_date','Expiry'],['reminder_date','Reminder']].map(([k, l]) => (
+                <div key={k}>
+                  <label className="text-slate-400 text-xs mb-1 block">{l}</label>
+                  <input type="date" value={form[k]} onChange={e => f(k, e.target.value)} className={inp} />
+                </div>
+              ))}
             </div>
             <div>
-              <label className="text-slate-400 text-xs mb-1 block">Currency</label>
-              <select value={form.currency} onChange={e => f('currency', e.target.value)} className={inp}>
-                {['PKR','USD','GBP','EUR','AED'].map(c => <option key={c} value={c} className="bg-[#0e1420]">{c}</option>)}
+              <label className="text-slate-400 text-xs mb-1 block">Notes</label>
+              <input value={form.notes} onChange={e => f('notes', e.target.value)} className={inp} />
+            </div>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <div onClick={() => f('is_active', !form.is_active)}
+                className={'w-10 h-5 rounded-full relative transition-colors ' + (form.is_active ? 'bg-[#4BBFBF]' : 'bg-white/10')}>
+                <div className={'absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ' + (form.is_active ? 'left-5' : 'left-0.5')} />
+              </div>
+              <span className="text-slate-300 text-sm">Active Seat</span>
+            </label>
+          </div>
+        )}
+
+        {mode === 'reassign' && (
+          <div className="p-5 space-y-4">
+            <div className="rounded-xl p-3 text-xs" style={{ background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.2)' }}>
+              <div className="text-orange-300 font-semibold mb-1">Reassigning this seat</div>
+              <div className="text-slate-400">
+                The current link to <span className="text-white font-medium">{seat.customer_name}</span> will be removed and a new link will be created for the customer you select below. Pricing and dates carry over unless you change them.
+              </div>
+            </div>
+            <div>
+              <label className="text-slate-400 text-xs mb-1 block font-medium">New Customer *</label>
+              <select value={newCustomer} onChange={e => setNewCustomer(e.target.value)} className={inp}>
+                <option value="" className="bg-[#0e1420]">— Select New Customer —</option>
+                {(customers || []).filter(c => String(c.id) !== String(seat.customer)).map(c => (
+                  <option key={c.id} value={c.id} className="bg-[#0e1420]">
+                    {c.contact_person}{c.company_name ? ' (' + c.company_name + ')' : ''}
+                  </option>
+                ))}
               </select>
             </div>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            {[['start_date','Start'],['expiry_date','Expiry'],['reminder_date','Reminder']].map(([k, l]) => (
-              <div key={k}>
-                <label className="text-slate-400 text-xs mb-1 block">{l}</label>
-                <input type="date" value={form[k]} onChange={e => f(k, e.target.value)} className={inp} />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-slate-400 text-xs mb-1 block font-medium">Monthly Price</label>
+                <input type="number" value={newPrice} onChange={e => setNewPrice(e.target.value)} className={inp} />
               </div>
-            ))}
-          </div>
-          <div>
-            <label className="text-slate-400 text-xs mb-1 block">Notes</label>
-            <input value={form.notes} onChange={e => f('notes', e.target.value)} className={inp} />
-          </div>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <div onClick={() => f('is_active', !form.is_active)}
-              className={'w-10 h-5 rounded-full relative transition-colors ' + (form.is_active ? 'bg-[#4BBFBF]' : 'bg-white/10')}>
-              <div className={'absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ' + (form.is_active ? 'left-5' : 'left-0.5')} />
+              <div>
+                <label className="text-slate-400 text-xs mb-1 block font-medium">Currency</label>
+                <select value={form.currency} onChange={e => f('currency', e.target.value)} className={inp}>
+                  {['PKR','USD','GBP','EUR','AED'].map(c => <option key={c} value={c} className="bg-[#0e1420]">{c}</option>)}
+                </select>
+              </div>
             </div>
-            <span className="text-slate-300 text-sm">Active Seat</span>
-          </label>
-        </div>
+            {newCustomer && (
+              <div className="flex items-center gap-2 p-3 rounded-xl text-sm" style={{ background: 'rgba(75,191,191,0.08)', border: '1px solid rgba(75,191,191,0.15)' }}>
+                <HiOutlineSwitchHorizontal className="w-4 h-4 text-[#4BBFBF] flex-shrink-0" />
+                <span className="text-slate-400 text-xs">
+                  <span className="text-white font-medium">{seat.mongo_user_name}</span>
+                  {' '}will move from{' '}
+                  <span className="text-red-400">{seat.customer_name}</span>
+                  {' '}to{' '}
+                  <span className="text-[#4BBFBF] font-semibold">{(customers || []).find(c => String(c.id) === String(newCustomer))?.contact_person}</span>
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="flex gap-3 p-5 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
-          <button onClick={save} disabled={saving}
-            className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
-            {saving ? 'Saving…' : 'Update'}
-          </button>
+          {mode === 'edit' ? (
+            <button onClick={save} disabled={saving}
+              className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
+              style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+              {saving ? 'Saving…' : 'Save Changes'}
+            </button>
+          ) : (
+            <button onClick={reassign} disabled={saving || !newCustomer}
+              className="flex-1 px-4 py-2.5 rounded-xl text-white font-semibold text-sm disabled:opacity-50"
+              style={{ background: 'rgba(249,115,22,0.3)', border: '1px solid rgba(249,115,22,0.5)' }}>
+              {saving ? 'Reassigning…' : 'Confirm Reassign'}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -404,7 +509,11 @@ export default function DATOnePage({ user }) {
   const [proxyModal, setProxyModal] = useState(null)
   const [assignModal, setAssignModal] = useState(null)
   const [userSubTab, setUserSubTab] = useState('active')
+  const navigate = useNavigate()
   const [tab, setTab] = useState('seats')
+  const [pageSize, setPageSize] = useState(15)
+  const [usersPage, setUsersPage] = useState(1)
+  const [seatsPage, setSeatsPage] = useState(1)
 
   const isCustomer = user?.role === 'customer'
   const canManage = ['admin','sales'].includes(user?.role)
@@ -414,14 +523,14 @@ export default function DATOnePage({ user }) {
     setLoading(true)
     try {
       const calls = [
-        api.get('/store/customer-seats/'),
+        api.get('/store/customer-seats/?page_size=500'),
         api.get('/store/sync/status/').catch(() => ({ data: null })),
       ]
       if (!isCustomer) {
-        calls.push(api.get('/store/dat-accounts/'))
-        calls.push(api.get('/store/mongo-users/'))
-        calls.push(api.get('/store/customers/'))
-        calls.push(api.get('/store/proxies/').catch(() => ({ data: [] })))
+        calls.push(api.get('/store/dat-accounts/?page_size=100'))
+        calls.push(api.get('/store/mongo-users/?page_size=500'))
+        calls.push(api.get('/store/customers/?page_size=200'))
+        calls.push(api.get('/store/proxies/?page_size=200').catch(() => ({ data: [] })))
       }
       const results = await Promise.all(calls)
       setSeats(Array.isArray(results[0].data) ? results[0].data : results[0].data.results || [])
@@ -665,8 +774,8 @@ export default function DATOnePage({ user }) {
               <div className="text-slate-500 text-xs">MongoDB data changed after your last edit.</div>
             </div>
           </div>
-          <button onClick={() => setTab('accounts')} className="px-3 py-1.5 rounded-lg bg-orange-500/20 text-orange-400 text-xs font-medium">
-            Review
+          <button onClick={() => navigate('/store/conflicts')} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-500/20 text-orange-400 text-xs font-medium hover:bg-orange-500/30">
+            Review <HiOutlineArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       )}
@@ -735,6 +844,13 @@ export default function DATOnePage({ user }) {
             <HiOutlinePlus className="w-4 h-4" /> Assign {selectedUsers.length} selected
           </button>
         )}
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-slate-500 text-xs">Show</span>
+          <select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setUsersPage(1); setSeatsPage(1) }}
+            className="bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-white text-xs">
+            {[10,15,25,50].map(n => <option key={n} value={n} className="bg-[#0e1420]">{n}</option>)}
+          </select>
+        </div>
         {tab === 'proxies' && canManage && (
           <button onClick={() => setProxyModal('new')}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
@@ -750,17 +866,18 @@ export default function DATOnePage({ user }) {
         <>
           {/* ── Customer Seats Tab ── */}
           {tab === 'seats' && (
+            <>
             <div className="glass-light rounded-2xl overflow-auto" style={{ border: '1px solid rgba(75,191,191,0.1)' }}>
               <table className="w-full min-w-[750px]">
                 <thead><tr className="border-b border-white/10">
-                  {['User Name','Email','DAT Account','Searches','Price / mo','Expiry','Status',''].map(h => (
-                    <th key={h} className="text-left text-slate-500 text-xs font-medium px-4 py-3">{h}</th>
+                  {['User Name','Email','DAT Account','Searches','Price / mo','Expiry','Status','actions'].map((h,i) => (
+                    <th key={h+i} className="text-left text-slate-500 text-xs font-medium px-4 py-3">{h === 'actions' ? '' : h}</th>
                   ))}
                 </tr></thead>
                 <tbody>
                   {filteredSeats.length === 0 ? (
                     <tr><td colSpan={8} className="text-center text-slate-500 py-12">No seats assigned yet</td></tr>
-                  ) : filteredSeats.map(s => (
+                  ) : filteredSeats.slice((seatsPage-1)*pageSize, seatsPage*pageSize).map(s => (
                     <tr key={s.id} className="border-b border-white/5 hover:bg-white/[0.02]">
                       <td className="px-4 py-3">
                         <div className="text-white text-sm font-medium">{s.mongo_user_name}</div>
@@ -773,13 +890,28 @@ export default function DATOnePage({ user }) {
                       <td className="px-4 py-3 text-slate-500 text-xs">{s.expiry_date || '—'}</td>
                       <td className="px-4 py-3"><span className={'px-2 py-0.5 rounded-full text-xs ' + (EXPIRY_COLORS[s.expiry_status] || '')}>{(s.expiry_status || '—').replace(/_/g, ' ')}</span></td>
                       <td className="px-4 py-3">
-                        {canManage && <button onClick={() => setEditModal(s)} className="p-1.5 rounded-lg bg-white/5 text-slate-400 hover:text-white"><HiOutlinePencil className="w-4 h-4" /></button>}
+                        {canManage && (
+                        <div className="flex gap-1">
+                          <button onClick={() => setEditModal(s)} title="Edit seat" className="p-1.5 rounded-lg bg-white/5 text-slate-400 hover:text-white"><HiOutlinePencil className="w-4 h-4" /></button>
+                          <button onClick={() => { setEditModal({...s, _openMode:'reassign'}) }} title="Reassign to another customer" className="p-1.5 rounded-lg bg-orange-500/10 text-orange-400 hover:bg-orange-500/20"><HiOutlineSwitchHorizontal className="w-4 h-4" /></button>
+                        </div>
+                      )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+            {Math.ceil(filteredSeats.length / pageSize) > 1 && (
+              <div className="flex items-center justify-between mt-3 px-1">
+                <span className="text-slate-500 text-sm">{filteredSeats.length} seats · page {seatsPage} of {Math.ceil(filteredSeats.length/pageSize)}</span>
+                <div className="flex gap-2">
+                  <button onClick={()=>setSeatsPage(p=>Math.max(1,p-1))} disabled={seatsPage===1} className="px-3 py-1 rounded-lg text-xs border border-white/10 text-slate-400 disabled:opacity-40 hover:bg-white/5">← Prev</button>
+                  <button onClick={()=>setSeatsPage(p=>Math.min(Math.ceil(filteredSeats.length/pageSize),p+1))} disabled={seatsPage===Math.ceil(filteredSeats.length/pageSize)} className="px-3 py-1 rounded-lg text-xs border border-white/10 text-slate-400 disabled:opacity-40 hover:bg-white/5">Next →</button>
+                </div>
+              </div>
+            )}
+            </>
           )}
 
           {/* ── All DAT Users Tab ── */}
@@ -807,14 +939,14 @@ export default function DATOnePage({ user }) {
                       checked={selectedUsers.length === filteredUsers.filter(u => u.is_active_in_cms && !u.assigned_to).length && filteredUsers.filter(u => u.is_active_in_cms && !u.assigned_to).length > 0}
                       onChange={e => setSelectedUsers(e.target.checked ? filteredUsers.filter(u => u.is_active_in_cms && !u.assigned_to) : [])} />
                   </th>}
-                  {(userSubTab === 'blocked' ? ['','User','Email','DAT Account','Blocked Reason',''] : ['','User','Email','DAT Account','Searches','Assigned To','Sync','']).map(h => (
-                    <th key={h} className="text-left text-slate-500 text-xs font-medium px-4 py-3">{h}</th>
+                  {(userSubTab === 'blocked' ? ['sel','User','Email','DAT Account','Blocked Reason','actions'] : ['sel','User','Email','DAT Account','Searches','Assigned To','Sync','actions']).map(h => (
+                    <th key={h} className="text-left text-slate-500 text-xs font-medium px-4 py-3">{h === 'sel' || h === 'actions' ? '' : h}</th>
                   ))}
                 </tr></thead>
                 <tbody>
                   {filteredUsers.length === 0 ? (
                     <tr><td colSpan={8} className="text-center text-slate-500 py-12">No users — run "Import from MongoDB"</td></tr>
-                  ) : filteredUsers.filter(u => userSubTab === 'blocked' ? !u.is_active_in_cms : u.is_active_in_cms).map(u => {
+                  ) : filteredUsers.filter(u => userSubTab === 'blocked' ? !u.is_active_in_cms : u.is_active_in_cms).slice((usersPage-1)*pageSize, usersPage*pageSize).map(u => {
                     const isSelected = selectedUsers.some(x => x.id === u.id)
                     const userSeat = seats.find(s => s.mongo_user === u.id)
                     const isExpiredSeat = userSeat?.expiry_status === 'expired'
@@ -886,6 +1018,15 @@ export default function DATOnePage({ user }) {
                 </tbody>
               </table>
             </div>
+            {Math.ceil(filteredUsers.filter(u => userSubTab === 'blocked' ? !u.is_active_in_cms : u.is_active_in_cms).length / pageSize) > 1 && (
+              <div className="flex items-center justify-between mt-3 px-1">
+                <span className="text-slate-500 text-sm">{filteredUsers.filter(u=>userSubTab==='blocked'?!u.is_active_in_cms:u.is_active_in_cms).length} users · page {usersPage} of {Math.ceil(filteredUsers.filter(u=>userSubTab==='blocked'?!u.is_active_in_cms:u.is_active_in_cms).length/pageSize)}</span>
+                <div className="flex gap-2">
+                  <button onClick={()=>setUsersPage(p=>Math.max(1,p-1))} disabled={usersPage===1} className="px-3 py-1 rounded-lg text-xs border border-white/10 text-slate-400 disabled:opacity-40 hover:bg-white/5">← Prev</button>
+                  <button onClick={()=>setUsersPage(p=>Math.min(Math.ceil(filteredUsers.filter(u=>userSubTab==='blocked'?!u.is_active_in_cms:u.is_active_in_cms).length/pageSize),p+1))} disabled={usersPage===Math.ceil(filteredUsers.filter(u=>userSubTab==='blocked'?!u.is_active_in_cms:u.is_active_in_cms).length/pageSize)} className="px-3 py-1 rounded-lg text-xs border border-white/10 text-slate-400 disabled:opacity-40 hover:bg-white/5">Next →</button>
+                </div>
+              </div>
+            )}
             </>
           )}
 
@@ -972,7 +1113,7 @@ export default function DATOnePage({ user }) {
       )}
 
       {bulkModal && <BulkAssignModal selectedUsers={selectedUsers} customers={customers} onClose={() => { setBulkModal(false); setSelectedUsers([]) }} onSaved={load} />}
-      {editModal && <EditSeatModal seat={editModal} onClose={() => setEditModal(null)} onSaved={load} />}
+      {editModal && <EditSeatModal seat={editModal} customers={customers} onClose={() => setEditModal(null)} onSaved={load} />}
       {proxyModal && <ProxyModal proxy={proxyModal === 'new' ? null : proxyModal} accounts={accounts} onClose={() => setProxyModal(null)} onSaved={load} />}
     </div>
   )

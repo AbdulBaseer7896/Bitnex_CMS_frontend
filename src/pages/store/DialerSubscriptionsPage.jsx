@@ -279,8 +279,8 @@ export default function DialerSubscriptionsPage({ user }) {
       if (typeFilter) q.push('dialer_type=' + typeFilter)
       if (regionFilter) q.push('region=' + regionFilter)
       const qs = q.length ? '?' + q.join('&') : ''
-      const calls = [api.get('/store/dialer-subscriptions/' + qs)]
-      if (!isCustomer) calls.push(api.get('/store/customers/'))
+      const calls = [api.get('/store/dialer-subscriptions/?page_size=500' + (qs ? '&' + qs.slice(1) : ''))]
+      if (!isCustomer) calls.push(api.get('/store/customers/?page_size=200'))
       const results = await Promise.all(calls)
       setSubs(Array.isArray(results[0].data) ? results[0].data : results[0].data.results || [])
       if (!isCustomer) setCustomers(Array.isArray(results[1].data) ? results[1].data : results[1].data.results || [])

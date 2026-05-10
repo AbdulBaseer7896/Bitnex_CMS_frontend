@@ -461,18 +461,17 @@ export default function PaymentClaimsPage({ user }) {
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const params = statusFilter ? '?status=' + statusFilter : ''
       const calls = [
-        api.get('/store/payment-claims/' + params),
-        api.get('/store/dialer-payment-claims/' + params),
+        api.get('/store/payment-claims/?page_size=200' + (statusFilter ? '&status=' + statusFilter : '')),
+        api.get('/store/dialer-payment-claims/?page_size=200' + (statusFilter ? '&status=' + statusFilter : '')),
       ]
       if (!isCustomer) {
-        calls.push(api.get('/store/customers/'))
-        calls.push(api.get('/store/customer-seats/'))
-        calls.push(api.get('/store/dialer-subscriptions/'))
+        calls.push(api.get('/store/customers/?page_size=200'))
+        calls.push(api.get('/store/customer-seats/?page_size=500'))
+        calls.push(api.get('/store/dialer-subscriptions/?page_size=500'))
       } else {
-        calls.push(api.get('/store/customer-seats/'))
-        calls.push(api.get('/store/dialer-subscriptions/'))
+        calls.push(api.get('/store/customer-seats/?page_size=500'))
+        calls.push(api.get('/store/dialer-subscriptions/?page_size=500'))
       }
       const results = await Promise.all(calls)
       const newDat = Array.isArray(results[0].data) ? results[0].data : results[0].data.results || []

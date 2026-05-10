@@ -4,7 +4,7 @@ import api from '../../api/client'
 import {
   HiOutlineDatabase, HiOutlineCurrencyDollar, HiOutlineClipboardList,
   HiOutlineCheckCircle, HiOutlineExclamation, HiOutlineArrowRight,
-  HiOutlineClock,
+  HiOutlineClock, HiOutlineTrash, HiOutlineUser, HiOutlineInformationCircle,
 } from 'react-icons/hi'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -42,15 +42,18 @@ export default function CustomerDashboard({ user }) {
   const navigate = useNavigate()
   const [seats, setSeats] = useState([])
   const [claims, setClaims] = useState([])
+  const [removedRecords, setRemovedRecords] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     Promise.all([
       api.get('/store/customer-seats/'),
       api.get('/store/payment-claims/'),
-    ]).then(([seatRes, claimRes]) => {
+      api.get('/store/removed-records/?page_size=50').catch(() => ({ data: [] })),
+    ]).then(([seatRes, claimRes, removedRes]) => {
       setSeats(Array.isArray(seatRes.data) ? seatRes.data : seatRes.data.results || [])
       setClaims(Array.isArray(claimRes.data) ? claimRes.data : claimRes.data.results || [])
+      setRemovedRecords(Array.isArray(removedRes.data) ? removedRes.data : removedRes.data.results || [])
     }).catch(() => {}).finally(() => setLoading(false))
   }, [])
 
@@ -151,6 +154,75 @@ export default function CustomerDashboard({ user }) {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Removed / Deactivated Users Notice */}
+          {removedRecords.length > 0 && (
+            <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.25)' }}>
+              <div className="flex items-center gap-3 px-5 py-4 border-b border-red-500/15">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(239,68,68,0.15)' }}>
+                  <HiOutlineTrash className="w-5 h-5 text-red-400" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-red-300 font-bold text-sm">
+                    {removedRecords.length} User{removedRecords.length > 1 ? 's' : ''} Removed from Your Account
+                  </div>
+                  <div className="text-slate-500 text-xs mt-0.5">
+                    These DAT seats were previously active on your account and have been removed or replaced
+                  </div>
+                </div>
+              </div>
+              <div className="divide-y divide-red-500/10">
+                {removedRecords.map(r => {
+                  const seats = r.seat_pricing || []
+                  const mySeat = seats.find(s => s.customer_email || s.customer) || seats[0]
+                  const resolution = r.resolution_action
+                  const resLabel = resolution === 'accept_mongo' ? 'Replaced / Updated' : resolution === 'mark_deleted' ? 'Deleted from DAT' : 'Removed'
+                  return (
+                    <div key={r.id} className="px-5 py-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-xs text-[#0e1420] bg-red-400">
+                          {(r.record_name?.[0] || '?').toUpperCase()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <span className="text-white font-semibold text-sm">{r.record_name}</span>
+                            {r.record_email && <span className="text-slate-500 text-xs">{r.record_email}</span>}
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-500/15 text-red-400">
+                              {resLabel}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-3 text-xs text-slate-400">
+                            {r.dat_account_name && (
+                              <span className="flex items-center gap-1">
+                                <HiOutlineDatabase className="w-3 h-3" /> {r.dat_account_name}
+                              </span>
+                            )}
+                            {mySeat?.monthly_price && (
+                              <span className="flex items-center gap-1 text-emerald-400">
+                                <HiOutlineCurrencyDollar className="w-3 h-3" />
+                                Was: {mySeat.currency} {parseFloat(mySeat.monthly_price).toLocaleString()}/mo
+                              </span>
+                            )}
+                            <span className="flex items-center gap-1">
+                              <HiOutlineClock className="w-3 h-3" />
+                              Removed: {new Date(r.resolved_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <div className="mt-2 p-2.5 rounded-lg text-xs flex items-start gap-2"
+                            style={{ background: 'rgba(75,191,191,0.06)', border: '1px solid rgba(75,191,191,0.12)' }}>
+                            <HiOutlineInformationCircle className="w-3.5 h-3.5 text-[#4BBFBF] flex-shrink-0 mt-0.5" />
+                            <span className="text-slate-400">
+                              This user seat is no longer active. Please contact your account manager to get a replacement seat or adjust your subscription.
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           )}

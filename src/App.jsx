@@ -16,10 +16,12 @@ import SettingsPage from './pages/settings/SettingsPage'
 // Store — new architecture
 import DATOnePage from './pages/store/DATOnePage'
 import PaymentClaimsPage from './pages/store/PaymentClaimsPage'
-import DATExpensesPage from './pages/store/DATExpensesPage'
+import StoreExpensesPage from './pages/store/StoreExpensesPage'
+import ConflictsPage from './pages/store/ConflictsPage'
 import MonthlyReportPage from './pages/store/MonthlyReportPage'
 import CustomersPage from './pages/store/CustomersPage'
 import DialerSubscriptionsPage from './pages/store/DialerSubscriptionsPage'
+import DATSubscriptionsPage from './pages/store/DATSubscriptionsPage'
 
 const TEAL = '#4BBFBF'
 
@@ -101,9 +103,17 @@ function AppRoutes() {
             <WithUser>{u => <PaymentClaimsPage user={u}/>}</WithUser>
           </ProtectedRoute>}/>
 
-        <Route path="/store/dat-expenses"
+        {/* Unified Expenses page — DAT One & Dialer tabs inside */}
+        <Route path="/store/expenses"
           element={<ProtectedRoute roles={STAFF}>
-            <WithUser>{u => <DATExpensesPage user={u}/>}</WithUser>
+            <StoreExpensesPage/>
+          </ProtectedRoute>}/>
+        <Route path="/store/dat-expenses" element={<Navigate to="/store/expenses" replace/>}/>
+        <Route path="/store/dialer-expenses" element={<Navigate to="/store/expenses" replace/>}/>
+
+        <Route path="/store/conflicts"
+          element={<ProtectedRoute roles={STAFF}>
+            <WithUser>{u => <ConflictsPage user={u}/>}</WithUser>
           </ProtectedRoute>}/>
 
         <Route path="/store/report"

@@ -10,7 +10,7 @@ import {
   HiOutlineShieldCheck, HiOutlineUserAdd, HiOutlineCollection,
   HiOutlineClock, HiOutlineCog, HiOutlineChevronDown,
   HiOutlineDatabase, HiOutlineCreditCard, HiOutlinePhone,
-  HiOutlineCash, HiOutlineChartPie,
+  HiOutlineCash, HiOutlineChartPie, HiOutlineExclamationCircle,
 } from 'react-icons/hi'
 import { RiTeamLine } from 'react-icons/ri'
 
@@ -27,8 +27,9 @@ const navConfig = {
     { to:'/store/customers',   icon:HiOutlineUsers,         label:'Customers' },
     { to:'/store/dat',         icon:HiOutlineDatabase,      label:'DAT One' },
     { to:'/store/payments',    icon:HiOutlineCreditCard,    label:'Payments' },
-    { to:'/store/dat-expenses',icon:HiOutlineCash,          label:'DAT Expenses' },
     { to:'/store/dialers',     icon:HiOutlinePhone,         label:'Dialers' },
+    { to:'/store/expenses',    icon:HiOutlineCash,          label:'Expenses' },
+    { to:'/store/conflicts',   icon:HiOutlineExclamationCircle, label:'Sync Conflicts' },
     { to:'/store/report',      icon:HiOutlineChartPie,      label:'Monthly Report' },
     { divider:'System' },
     { to:'/admin/activity',    icon:HiOutlineCollection,    label:'Audit Logs' },
@@ -50,7 +51,9 @@ const navConfig = {
     { to:'/store/customers',   icon:HiOutlineUsers,          label:'Customers' },
     { to:'/store/dat',         icon:HiOutlineDatabase,       label:'DAT One' },
     { to:'/store/payments',    icon:HiOutlineCreditCard,     label:'Payments' },
-    { to:'/store/dat-expenses',icon:HiOutlineCash,           label:'DAT Expenses' },
+    { to:'/store/dialers',     icon:HiOutlinePhone,          label:'Dialers' },
+    { to:'/store/expenses',    icon:HiOutlineCash,           label:'Expenses' },
+    { to:'/store/conflicts',   icon:HiOutlineExclamationCircle, label:'Sync Conflicts' },
     { to:'/store/report',      icon:HiOutlineChartPie,       label:'Monthly Report' },
   ],
   employee: [
@@ -66,8 +69,9 @@ const navConfig = {
     { to:'/store/customers',   icon:HiOutlineUsers,         label:'Customers' },
     { to:'/store/dat',         icon:HiOutlineDatabase,      label:'DAT One' },
     { to:'/store/payments',    icon:HiOutlineCreditCard,    label:'Payments' },
-    { to:'/store/dat-expenses',icon:HiOutlineCash,          label:'DAT Expenses' },
     { to:'/store/dialers',     icon:HiOutlinePhone,         label:'Dialers' },
+    { to:'/store/expenses',    icon:HiOutlineCash,          label:'Expenses' },
+    { to:'/store/conflicts',   icon:HiOutlineExclamationCircle, label:'Sync Conflicts' },
     { to:'/store/report',      icon:HiOutlineChartPie,      label:'Monthly Report' },
   ],
   customer: [
