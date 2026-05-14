@@ -7,7 +7,7 @@ import {
   HiOutlineCheck, HiOutlineDocumentText,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
+const TEAL = '#f97316'
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
@@ -307,7 +307,7 @@ function EmployeeRow({ emp, onEdit, onGenerate }) {
         <td className="px-5 py-4">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full flex items-center justify-center text-[#0e1420] font-bold text-sm flex-shrink-0"
-                 style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+                 style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
               {(emp.first_name?.[0] || emp.username?.[0] || 'E').toUpperCase()}
             </div>
             <div>
@@ -320,7 +320,7 @@ function EmployeeRow({ emp, onEdit, onGenerate }) {
         <td className="px-5 py-4">
           <span className={`badge capitalize text-xs ${
             emp.employment_status === 'probation' ? 'bg-amber-500/15 text-amber-400' :
-            emp.employment_status === 'permanent' ? 'bg-[#4BBFBF]/15 text-[#4BBFBF]' :
+            emp.employment_status === 'permanent' ? 'bg-[#f97316]/15 text-[#f97316]' :
             'bg-slate-500/15 text-slate-400'
           }`}>{emp.employment_status || 'permanent'}</span>
         </td>
@@ -348,7 +348,7 @@ function EmployeeRow({ emp, onEdit, onGenerate }) {
           <td colSpan={4} className="px-5 py-4">
             {loadingDetails ? (
               <div className="flex items-center gap-2 text-slate-500 text-sm py-2">
-                <div className="w-4 h-4 border border-[#4BBFBF]/40 border-t-[#4BBFBF] rounded-full animate-spin" />
+                <div className="w-4 h-4 border border-orange-500/40 border-t-[#f97316] rounded-full animate-spin" />
                 Loading...
               </div>
             ) : (
@@ -386,7 +386,7 @@ function EmployeeRow({ emp, onEdit, onGenerate }) {
                     <div className="glass rounded-xl p-4 text-slate-500 text-sm text-center">
                       No salary structure set yet.
                       <button onClick={() => onEdit(emp)}
-                        className="block mx-auto mt-2 text-[#4BBFBF] text-xs hover:underline">
+                        className="block mx-auto mt-2 text-[#f97316] text-xs hover:underline">
                         + Set Now
                       </button>
                     </div>
@@ -411,7 +411,7 @@ function EmployeeRow({ emp, onEdit, onGenerate }) {
                             <div className="text-slate-500 text-xs">₨{Number(s.net_payable||0).toLocaleString()}</div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className={`badge text-xs ${s.status === 'paid' ? 'bg-[#4BBFBF]/15 text-[#4BBFBF]' : 'bg-amber-500/15 text-amber-400'}`}>
+                            <span className={`badge text-xs ${s.status === 'paid' ? 'bg-[#f97316]/15 text-[#f97316]' : 'bg-amber-500/15 text-amber-400'}`}>
                               {s.status}
                             </span>
                             {s.status !== 'paid' && (

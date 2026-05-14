@@ -4,7 +4,7 @@ import TopBar from './TopBar'
 
 export default function DashboardLayout() {
   return (
-    <div className="min-h-screen bg-[#060b18] flex">
+    <div className="min-h-screen flex" style={{ background: '#0d0f14' }}>
       <Sidebar />
       <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
         <TopBar />

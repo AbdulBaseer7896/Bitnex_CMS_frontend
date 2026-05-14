@@ -2,29 +2,20 @@ import { useEffect, useState } from 'react'
 import api from '../../api/client'
 import toast from 'react-hot-toast'
 import {
-  HiOutlineSearch, HiOutlineFilter, HiOutlinePencil,
-  HiOutlineCheckCircle, HiOutlineClock, HiOutlineX,
-  HiOutlineUser, HiOutlinePhone, HiOutlineMail,
-  HiOutlineBriefcase, HiOutlineCalendar, HiOutlineChevronDown,
+  HiOutlineSearch, HiOutlinePencil,
+  HiOutlineX, HiOutlineUserAdd,
+  HiOutlineEye, HiOutlineEyeOff,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
+const TEAL = '#f97316'
 
 const EMP_STATUS = {
   probation:     { label: 'Probation',    color: 'bg-amber-500/15 text-amber-400 border-amber-500/25' },
-  permanent:     { label: 'Permanent',    color: 'bg-[#4BBFBF]/15 text-[#4BBFBF] border-[#4BBFBF]/25' },
+  permanent:     { label: 'Permanent',    color: 'bg-[#f97316]/15 text-[#f97316] border-orange-500/25' },
   contract:      { label: 'Contract',     color: 'bg-sky-500/15 text-sky-400 border-sky-500/25' },
   notice_period: { label: 'Notice Period',color: 'bg-red-500/15 text-red-400 border-red-500/25' },
   resigned:      { label: 'Resigned',     color: 'bg-slate-500/15 text-slate-400 border-slate-500/25' },
   terminated:    { label: 'Terminated',   color: 'bg-red-900/20 text-red-300 border-red-900/30' },
-}
-
-const ROLE_COLORS = {
-  admin: 'bg-[#4BBFBF]/20 text-[#4BBFBF]',
-  hr: 'bg-violet-500/20 text-violet-400',
-  accountant: 'bg-emerald-500/20 text-emerald-400',
-  employee: 'bg-sky-500/20 text-sky-400',
-  sales: 'bg-orange-500/20 text-orange-400',
 }
 
 function StatusBadge({ status }) {
@@ -32,6 +23,9 @@ function StatusBadge({ status }) {
   return <span className={`badge border capitalize ${cfg.color}`}>{cfg.label}</span>
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Edit Modal
+// ─────────────────────────────────────────────────────────────────────────────
 function EditModal({ employee, onClose, onSave }) {
   const [form, setForm] = useState({
     first_name: employee.first_name || '',
@@ -49,173 +43,103 @@ function EditModal({ employee, onClose, onSave }) {
     is_active: employee.is_active !== false,
   })
   const [saving, setSaving] = useState(false)
-
   const f = (k, v) => setForm(p => ({ ...p, [k]: v }))
 
   const handleSave = async (e) => {
-    e.preventDefault()
-    setSaving(true)
+    e.preventDefault(); setSaving(true)
     try {
       await api.patch(`/users/${employee.id}/`, form)
       toast.success('Employee updated successfully!')
-      onSave()
-      onClose()
+      onSave(); onClose()
     } catch (err) {
       const data = err.response?.data
       toast.error(data ? Object.values(data).flat().join(' ') : 'Failed to update employee')
     } finally { setSaving(false) }
   }
 
-  // Quick action: end probation
-  const endProbation = async () => {
-    setSaving(true)
-    try {
-      await api.patch(`/users/${employee.id}/`, {
-        employment_status: 'permanent',
-        probation_end_date: new Date().toISOString().slice(0, 10),
-      })
-      toast.success(`${employee.full_name} is now a permanent employee! 🎉`)
-      onSave()
-      onClose()
-    } catch { toast.error('Failed to end probation') }
-    finally { setSaving(false) }
-  }
-
-  // Quick action: start notice period
-  const startNotice = async () => {
-    setSaving(true)
-    try {
-      await api.patch(`/users/${employee.id}/`, {
-        employment_status: 'notice_period',
-        notice_period_start: new Date().toISOString().slice(0, 10),
-      })
-      toast.success('Notice period started.')
-      onSave()
-      onClose()
-    } catch { toast.error('Failed to start notice period') }
-    finally { setSaving(false) }
-  }
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
       <div className="glass-light rounded-3xl p-6 w-full max-w-2xl animate-slide-up my-4">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-[#0e1420] font-bold text-lg"
-                 style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
-              {(employee.first_name?.[0] || employee.username?.[0] || 'E').toUpperCase()}
-            </div>
-            <div>
-              <h3 className="font-display font-bold text-white text-xl">{employee.full_name}</h3>
-              <p className="text-slate-500 text-sm">{employee.username}</p>
-            </div>
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="font-display font-bold text-white text-xl">Edit Employee</h3>
+            <p className="text-slate-500 text-sm">{employee.full_name || employee.username}</p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
-            <HiOutlineX className="w-6 h-6" />
+          <button onClick={onClose} className="text-slate-400 hover:text-white">
+            <HiOutlineX className="w-6 h-6"/>
           </button>
-        </div>
-
-        {/* Quick actions */}
-        <div className="flex flex-wrap gap-2 mb-5">
-          {employee.employment_status === 'probation' && (
-            <button onClick={endProbation} disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all disabled:opacity-50"
-              style={{ background:'rgba(75,191,191,0.15)', color: TEAL, border:`1px solid rgba(75,191,191,0.25)` }}>
-              <HiOutlineCheckCircle className="w-4 h-4" />
-              End Probation → Make Permanent
-            </button>
-          )}
-          {!['notice_period','resigned','terminated'].includes(employee.employment_status) && (
-            <button onClick={startNotice} disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all disabled:opacity-50"
-              style={{ background:'rgba(239,68,68,0.1)', color:'#f87171', border:'1px solid rgba(239,68,68,0.2)' }}>
-              <HiOutlineClock className="w-4 h-4" />
-              Start Notice Period
-            </button>
-          )}
         </div>
 
         <form onSubmit={handleSave} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="block text-xs text-slate-400 mb-1.5">First Name</label>
-              <input className="input" value={form.first_name} onChange={e => f('first_name', e.target.value)} /></div>
-            <div><label className="block text-xs text-slate-400 mb-1.5">Last Name</label>
-              <input className="input" value={form.last_name} onChange={e => f('last_name', e.target.value)} /></div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">First Name</label>
+              <input className="input" value={form.first_name} onChange={e => f('first_name', e.target.value)}/>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Last Name</label>
+              <input className="input" value={form.last_name} onChange={e => f('last_name', e.target.value)}/>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="block text-xs text-slate-400 mb-1.5">Email</label>
-              <input type="email" className="input" value={form.email} onChange={e => f('email', e.target.value)} /></div>
-            <div><label className="block text-xs text-slate-400 mb-1.5">Phone</label>
-              <input className="input" value={form.phone} onChange={e => f('phone', e.target.value)} /></div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Email</label>
+              <input type="email" className="input" value={form.email} onChange={e => f('email', e.target.value)}/>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Phone</label>
+              <input className="input" value={form.phone} onChange={e => f('phone', e.target.value)}/>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="block text-xs text-slate-400 mb-1.5">Department</label>
-              <input className="input" value={form.department} onChange={e => f('department', e.target.value)} /></div>
-            <div><label className="block text-xs text-slate-400 mb-1.5">Designation</label>
-              <input className="input" value={form.designation} onChange={e => f('designation', e.target.value)} /></div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Department</label>
+              <input className="input" value={form.department} onChange={e => f('department', e.target.value)}/>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Designation</label>
+              <input className="input" value={form.designation} onChange={e => f('designation', e.target.value)}/>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="block text-xs text-slate-400 mb-1.5">Employment Status</label>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Status</label>
               <select className="input" value={form.employment_status} onChange={e => f('employment_status', e.target.value)}>
-                {Object.entries(EMP_STATUS).map(([k, v]) => (
-                  <option key={k} value={k} className="bg-slate-900">{v.label}</option>
+                {['probation','permanent','contract','notice_period','resigned','terminated'].map(s => (
+                  <option key={s} value={s} className="bg-slate-900 capitalize">{s.replace('_',' ')}</option>
                 ))}
-              </select></div>
-            <div><label className="block text-xs text-slate-400 mb-1.5">Joining Date</label>
-              <input type="date" className="input" value={form.joining_date} onChange={e => f('joining_date', e.target.value)} /></div>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Joining Date</label>
+              <input type="date" className="input" value={form.joining_date} onChange={e => f('joining_date', e.target.value)}/>
+            </div>
           </div>
-
           {form.employment_status === 'probation' && (
-            <div><label className="block text-xs text-slate-400 mb-1.5">Probation End Date</label>
-              <input type="date" className="input" value={form.probation_end_date} onChange={e => f('probation_end_date', e.target.value)} /></div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Probation End Date</label>
+              <input type="date" className="input" value={form.probation_end_date} onChange={e => f('probation_end_date', e.target.value)}/>
+            </div>
           )}
-
           {form.employment_status === 'notice_period' && (
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="block text-xs text-slate-400 mb-1.5">Notice Start Date</label>
-                <input type="date" className="input" value={form.notice_period_start} onChange={e => f('notice_period_start', e.target.value)} /></div>
-              <div><label className="block text-xs text-slate-400 mb-1.5">Notice Period (days)</label>
-                <input type="number" min="1" className="input" value={form.notice_period_days} onChange={e => f('notice_period_days', +e.target.value)} /></div>
+              <div>
+                <label className="block text-xs text-slate-400 mb-1.5">Notice Start</label>
+                <input type="date" className="input" value={form.notice_period_start} onChange={e => f('notice_period_start', e.target.value)}/>
+              </div>
+              <div>
+                <label className="block text-xs text-slate-400 mb-1.5">Notice Days</label>
+                <input type="number" className="input" value={form.notice_period_days} onChange={e => f('notice_period_days', +e.target.value)}/>
+              </div>
             </div>
           )}
-
-          <div className="flex items-center justify-between p-3 glass rounded-xl">
-            <div>
-              <div className="text-white text-sm font-medium">Department Head</div>
-              <div className="text-slate-500 text-xs">Can approve leaves for their department</div>
-            </div>
-            <button type="button" onClick={() => f('is_dept_head', !form.is_dept_head)}
-              className="transition-opacity hover:opacity-80">
-              {form.is_dept_head ? (
-                <svg width="42" height="22" viewBox="0 0 42 22" fill="none">
-                  <rect width="42" height="22" rx="11" fill="#4BBFBF"/><circle cx="31" cy="11" r="8" fill="white"/>
-                </svg>
-              ) : (
-                <svg width="42" height="22" viewBox="0 0 42 22" fill="none">
-                  <rect width="42" height="22" rx="11" fill="#334155"/><circle cx="11" cy="11" r="8" fill="#64748b"/>
-                </svg>
-              )}
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between p-3 glass rounded-xl">
-            <div>
-              <div className="text-white text-sm font-medium">Active Account</div>
-              <div className="text-slate-500 text-xs">Disable to block login access</div>
-            </div>
-            <button type="button" onClick={() => f('is_active', !form.is_active)}
-              className="transition-opacity hover:opacity-80">
-              {form.is_active ? (
-                <svg width="42" height="22" viewBox="0 0 42 22" fill="none">
-                  <rect width="42" height="22" rx="11" fill="#4BBFBF"/><circle cx="31" cy="11" r="8" fill="white"/>
-                </svg>
-              ) : (
-                <svg width="42" height="22" viewBox="0 0 42 22" fill="none">
-                  <rect width="42" height="22" rx="11" fill="#334155"/><circle cx="11" cy="11" r="8" fill="#64748b"/>
-                </svg>
-              )}
-            </button>
+          <div className="flex items-center gap-3 p-3 glass rounded-xl">
+            <input type="checkbox" id="is_dept_head" checked={form.is_dept_head}
+              onChange={e => f('is_dept_head', e.target.checked)}
+              className="w-4 h-4 accent-orange-500"/>
+            <label htmlFor="is_dept_head" className="text-sm text-slate-300 cursor-pointer">
+              Department Head — can approve leaves for this department
+            </label>
           </div>
 
           <div className="flex gap-3 pt-2">
@@ -230,6 +154,188 @@ function EditModal({ employee, onClose, onSave }) {
   )
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Add User Modal — replaces the old "Add Employee" sidebar route
+// ─────────────────────────────────────────────────────────────────────────────
+const EMPTY_USER = {
+  username: '', email: '', first_name: '', last_name: '',
+  password: '', confirm_password: '', role: 'employee',
+  phone: '', department: '', designation: '',
+  is_dept_head: false, employment_status: 'probation',
+  joining_date: '', probation_end_date: '', notice_period_days: 30,
+}
+
+function AddUserModal({ onClose, onCreated }) {
+  const [form, setForm] = useState(EMPTY_USER)
+  const [departments, setDepartments] = useState([])
+  const [showPwd, setShowPwd] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const f = (k, v) => setForm(p => ({ ...p, [k]: v }))
+
+  useEffect(() => {
+    api.get('/core/departments/').then(({ data }) => {
+      setDepartments(data.results || data || [])
+    }).catch(() => {})
+  }, [])
+
+  const submit = async (e) => {
+    e.preventDefault()
+    if (form.password !== form.confirm_password) {
+      toast.error('Passwords do not match'); return
+    }
+    setSaving(true)
+    try {
+      await api.post('/users/', form)
+      toast.success('User created!')
+      onCreated()
+      onClose()
+    } catch (err) {
+      const d = err.response?.data
+      toast.error(d ? Object.values(d).flat().join(' ') : 'Failed to create user')
+    } finally { setSaving(false) }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+      <div className="glass-light rounded-3xl p-6 w-full max-w-2xl animate-slide-up my-4">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                 style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
+              <HiOutlineUserAdd className="w-5 h-5 text-white"/>
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-white text-xl">Add User</h3>
+              <p className="text-slate-500 text-sm">Create a new user account</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="text-slate-400 hover:text-white">
+            <HiOutlineX className="w-6 h-6"/>
+          </button>
+        </div>
+
+        <form onSubmit={submit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">First Name</label>
+              <input className="input" value={form.first_name} onChange={e => f('first_name', e.target.value)}/>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Last Name</label>
+              <input className="input" value={form.last_name} onChange={e => f('last_name', e.target.value)}/>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5">Username *</label>
+            <input required className="input" value={form.username} onChange={e => f('username', e.target.value)}/>
+          </div>
+
+          <div>
+            <label className="block text-xs text-slate-400 mb-1.5">Email *</label>
+            <input required type="email" className="input" value={form.email} onChange={e => f('email', e.target.value)}/>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Password *</label>
+              <div className="relative">
+                <input required type={showPwd ? 'text' : 'password'} className="input pr-10"
+                  placeholder="Min 8 chars"
+                  value={form.password} onChange={e => f('password', e.target.value)}/>
+                <button type="button" onClick={() => setShowPwd(!showPwd)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white">
+                  {showPwd ? <HiOutlineEyeOff className="w-4 h-4"/> : <HiOutlineEye className="w-4 h-4"/>}
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Confirm Password *</label>
+              <input required type="password"
+                className={`input ${form.confirm_password && form.confirm_password !== form.password ? 'ring-2 ring-red-500/40' : ''}`}
+                value={form.confirm_password} onChange={e => f('confirm_password', e.target.value)}/>
+              {form.confirm_password && form.confirm_password !== form.password && (
+                <p className="text-red-400 text-xs mt-1">Passwords do not match</p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Role *</label>
+              <select className="input" value={form.role} onChange={e => f('role', e.target.value)}>
+                {['admin','hr','accountant','employee','sales'].map(r => (
+                  <option key={r} value={r} className="bg-slate-900 capitalize">{r}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Department</label>
+              <select className="input" value={form.department} onChange={e => f('department', e.target.value)}>
+                <option value="" className="bg-slate-900">— Select —</option>
+                {departments.map(d => (
+                  <option key={d.id || d.name} value={d.name} className="bg-slate-900">{d.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Designation</label>
+              <input className="input" value={form.designation} onChange={e => f('designation', e.target.value)}/>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Phone</label>
+              <input className="input" value={form.phone} onChange={e => f('phone', e.target.value)}/>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Status</label>
+              <select className="input" value={form.employment_status} onChange={e => f('employment_status', e.target.value)}>
+                {['probation','permanent','contract'].map(s => (
+                  <option key={s} value={s} className="bg-slate-900 capitalize">{s}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Joining Date</label>
+              <input type="date" className="input" value={form.joining_date} onChange={e => f('joining_date', e.target.value)}/>
+            </div>
+          </div>
+          {form.employment_status === 'probation' && (
+            <div>
+              <label className="block text-xs text-slate-400 mb-1.5">Probation End Date</label>
+              <input type="date" className="input" value={form.probation_end_date} onChange={e => f('probation_end_date', e.target.value)}/>
+            </div>
+          )}
+
+          <div className="flex items-center gap-3 p-3 glass rounded-xl">
+            <input type="checkbox" id="add_dept_head" checked={form.is_dept_head}
+              onChange={e => f('is_dept_head', e.target.checked)}
+              className="w-4 h-4 accent-orange-500"/>
+            <label htmlFor="add_dept_head" className="text-sm text-slate-300 cursor-pointer">
+              Department Head — can approve leaves for the dept
+            </label>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={onClose} className="flex-1 btn-ghost">Cancel</button>
+            <button type="submit" disabled={saving} className="flex-1 btn-primary disabled:opacity-60">
+              {saving ? 'Creating…' : 'Create User'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Main Page
+// ─────────────────────────────────────────────────────────────────────────────
 export default function EmployeesPage() {
   const [employees, setEmployees] = useState([])
   const [loading, setLoading]     = useState(true)
@@ -237,6 +343,7 @@ export default function EmployeesPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [deptFilter, setDeptFilter]   = useState('all')
   const [editingEmp, setEditingEmp]   = useState(null)
+  const [showAdd, setShowAdd]         = useState(false)
 
   useEffect(() => { fetchEmployees() }, [])
 
@@ -270,6 +377,19 @@ export default function EmployeesPage() {
 
   return (
     <div className="space-y-5">
+      {/* Header with Add User button */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-white">Employees</h1>
+          <p className="text-slate-500 text-sm mt-0.5">Manage team members and their employment status</p>
+        </div>
+        <button onClick={() => setShowAdd(true)}
+          className="btn-primary flex items-center gap-2 text-sm px-4 py-2.5">
+          <HiOutlineUserAdd className="w-4 h-4"/>
+          Add User
+        </button>
+      </div>
+
       {/* Summary stats */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {[
@@ -292,7 +412,7 @@ export default function EmployeesPage() {
           {['all', 'probation', 'permanent', 'contract', 'notice_period'].map(s => (
             <button key={s} onClick={() => setStatusFilter(s)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all ${
-                statusFilter === s ? 'text-[#4BBFBF]' : 'glass text-slate-400 hover:text-white'
+                statusFilter === s ? 'text-[#f97316]' : 'glass text-slate-400 hover:text-white'
               }`}
               style={statusFilter === s ? { background:'rgba(75,191,191,0.15)', border:'1px solid rgba(75,191,191,0.25)' } : {}}>
               {s === 'all' ? 'All' : s.replace('_', ' ')}
@@ -338,7 +458,7 @@ export default function EmployeesPage() {
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full flex items-center justify-center text-[#0e1420] font-bold text-sm flex-shrink-0"
-                           style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+                           style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
                         {(emp.first_name?.[0] || emp.username?.[0] || 'E').toUpperCase()}
                       </div>
                       <div>
@@ -373,11 +493,11 @@ export default function EmployeesPage() {
       )}
 
       {editingEmp && (
-        <EditModal
-          employee={editingEmp}
-          onClose={() => setEditingEmp(null)}
-          onSave={fetchEmployees}
-        />
+        <EditModal employee={editingEmp}
+          onClose={() => setEditingEmp(null)} onSave={fetchEmployees}/>
+      )}
+      {showAdd && (
+        <AddUserModal onClose={() => setShowAdd(false)} onCreated={fetchEmployees}/>
       )}
     </div>
   )

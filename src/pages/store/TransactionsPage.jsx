@@ -6,7 +6,7 @@ import {
   HiOutlineCheck, HiOutlinePhotograph,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
+const TEAL = '#f97316'
 const STATUS_COLORS = {
   pending: 'bg-yellow-500/15 text-yellow-400',
   completed: 'bg-emerald-500/15 text-emerald-400',
@@ -78,7 +78,7 @@ function TxnModal({ txn, customers, products, subscriptions, onClose, onSaved })
             <div className="col-span-2">
               <label className="text-slate-400 text-sm mb-1 block">Customer *</label>
               <select value={form.customer} onChange={e => { f('customer', e.target.value); f('subscription', '') }}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
                 <option value="" className="bg-[#0e1420]">— Select Customer —</option>
                 {customers.map(c => <option key={c.id} value={c.id} className="bg-[#0e1420]">{c.contact_person}{c.company_name ? ` (${c.company_name})` : ''}</option>)}
               </select>
@@ -86,7 +86,7 @@ function TxnModal({ txn, customers, products, subscriptions, onClose, onSaved })
             <div>
               <label className="text-slate-400 text-sm mb-1 block">Product</label>
               <select value={form.product} onChange={e => f('product', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
                 <option value="" className="bg-[#0e1420]">— Select Product —</option>
                 {products.map(p => <option key={p.id} value={p.id} className="bg-[#0e1420]">{p.name}</option>)}
               </select>
@@ -94,7 +94,7 @@ function TxnModal({ txn, customers, products, subscriptions, onClose, onSaved })
             <div>
               <label className="text-slate-400 text-sm mb-1 block">Subscription</label>
               <select value={form.subscription} onChange={e => f('subscription', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
                 <option value="" className="bg-[#0e1420]">— None —</option>
                 {filteredSubs.map(s => <option key={s.id} value={s.id} className="bg-[#0e1420]">{s.product_name} ({s.status})</option>)}
               </select>
@@ -102,19 +102,19 @@ function TxnModal({ txn, customers, products, subscriptions, onClose, onSaved })
             <div>
               <label className="text-slate-400 text-sm mb-1 block">Amount *</label>
               <input type="number" value={form.amount} onChange={e => f('amount', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50" />
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50" />
             </div>
             <div>
               <label className="text-slate-400 text-sm mb-1 block">Currency</label>
               <select value={form.currency} onChange={e => f('currency', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
                 {['PKR','USD','GBP','EUR','AED'].map(c => <option key={c} value={c} className="bg-[#0e1420]">{c}</option>)}
               </select>
             </div>
             <div>
               <label className="text-slate-400 text-sm mb-1 block">Payment Method</label>
               <select value={form.payment_method} onChange={e => f('payment_method', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
                 {METHODS.map(m => (
                   <option key={m} value={m} className="bg-[#0e1420]">
                     {m.replace(/_/g,' ').replace(/\b\w/g, c => c.toUpperCase())}
@@ -125,7 +125,7 @@ function TxnModal({ txn, customers, products, subscriptions, onClose, onSaved })
             <div>
               <label className="text-slate-400 text-sm mb-1 block">Status</label>
               <select value={form.status} onChange={e => f('status', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
                 {['pending','completed','failed','refunded'].map(s => (
                   <option key={s} value={s} className="bg-[#0e1420]">{s.charAt(0).toUpperCase()+s.slice(1)}</option>
                 ))}
@@ -134,27 +134,27 @@ function TxnModal({ txn, customers, products, subscriptions, onClose, onSaved })
             <div>
               <label className="text-slate-400 text-sm mb-1 block">Transaction Date</label>
               <input type="date" value={form.transaction_date} onChange={e => f('transaction_date', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50" />
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50" />
             </div>
           </div>
           <div>
             <label className="text-slate-400 text-sm mb-1 block">Description / Notes</label>
             <textarea value={form.description} onChange={e => f('description', e.target.value)} rows={2}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50" />
           </div>
           <div>
             <label className="text-slate-400 text-sm mb-2 block">Payment Screenshot / Proof</label>
             {txn?.payment_screenshot && !screenshot && (
               <div className="mb-2">
                 <a href={txn.payment_screenshot} target="_blank" rel="noreferrer"
-                  className="flex items-center gap-2 text-[#4BBFBF] text-sm hover:underline">
+                  className="flex items-center gap-2 text-[#f97316] text-sm hover:underline">
                   <HiOutlinePhotograph className="w-4 h-4" /> View existing screenshot
                 </a>
               </div>
             )}
             {screenshot ? (
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#4BBFBF]/10 border border-[#4BBFBF]/20">
-                <HiOutlinePhotograph className="w-5 h-5 text-[#4BBFBF]" />
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#f97316]/10 border border-orange-500/20">
+                <HiOutlinePhotograph className="w-5 h-5 text-[#f97316]" />
                 <span className="text-slate-300 text-sm flex-1 truncate">{screenshot.name}</span>
                 <button onClick={() => setScreenshot(null)} className="text-slate-500 hover:text-red-400">
                   <HiOutlineX className="w-4 h-4" />
@@ -162,7 +162,7 @@ function TxnModal({ txn, customers, products, subscriptions, onClose, onSaved })
               </div>
             ) : (
               <button onClick={() => fileRef.current.click()}
-                className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-[#4BBFBF]/40 hover:text-slate-300 transition-colors">
+                className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-orange-500/40 hover:text-slate-300 transition-colors">
                 <HiOutlinePhotograph className="w-5 h-5" />
                 Upload payment screenshot
               </button>
@@ -175,7 +175,7 @@ function TxnModal({ txn, customers, products, subscriptions, onClose, onSaved })
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white">Cancel</button>
           <button onClick={save} disabled={saving}
             className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold"
-            style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Saving…' : (isEdit ? 'Update' : 'Record Transaction')}
           </button>
         </div>
@@ -236,7 +236,7 @@ export default function TransactionsPage({ user }) {
         </div>
         <div className="flex gap-3">
           <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
             <option value="" className="bg-[#0e1420]">All Status</option>
             {['pending','completed','failed','refunded'].map(s => (
               <option key={s} value={s} className="bg-[#0e1420]">{s}</option>
@@ -248,7 +248,7 @@ export default function TransactionsPage({ user }) {
           {canManage && (
             <button onClick={() => setModal('new')}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold"
-              style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+              style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
               <HiOutlinePlus className="w-4 h-4" /> Record Transaction
             </button>
           )}
@@ -261,7 +261,7 @@ export default function TransactionsPage({ user }) {
             { label: 'Total Received', value: `PKR ${parseFloat(summary.total_amount||0).toLocaleString()}`, color: 'text-emerald-400' },
             { label: 'Pending', value: `PKR ${parseFloat(summary.pending_amount||0).toLocaleString()}`, color: 'text-yellow-400' },
             { label: 'Total Transactions', value: summary.total_transactions, color: 'text-white' },
-            { label: 'Top Method', value: summary.by_method?.[0]?.payment_method?.replace(/_/g,' ') || '—', color: 'text-[#4BBFBF]' },
+            { label: 'Top Method', value: summary.by_method?.[0]?.payment_method?.replace(/_/g,' ') || '—', color: 'text-[#f97316]' },
           ].map(s => (
             <div key={s.label} className="glass-light rounded-2xl p-4" style={{ border: '1px solid rgba(75,191,191,0.1)' }}>
               <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
@@ -296,7 +296,7 @@ export default function TransactionsPage({ user }) {
                   </td>
                   <td className="px-4 py-3 text-white text-sm">{t.customer_name}</td>
                   <td className="px-4 py-3 text-slate-400 text-sm">{t.product_name || '—'}</td>
-                  <td className="px-4 py-3 font-medium text-sm text-[#4BBFBF]">{t.currency} {parseFloat(t.amount).toLocaleString()}</td>
+                  <td className="px-4 py-3 font-medium text-sm text-[#f97316]">{t.currency} {parseFloat(t.amount).toLocaleString()}</td>
                   <td className="px-4 py-3 text-slate-400 text-xs capitalize">{t.payment_method?.replace(/_/g,' ')}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs ${STATUS_COLORS[t.status] || ''}`}>{t.status}</span>
@@ -305,7 +305,7 @@ export default function TransactionsPage({ user }) {
                   <td className="px-4 py-3">
                     {t.payment_screenshot
                       ? <a href={t.payment_screenshot} target="_blank" rel="noreferrer"
-                          className="flex items-center gap-1 text-[#4BBFBF] hover:underline text-xs">
+                          className="flex items-center gap-1 text-[#f97316] hover:underline text-xs">
                           <HiOutlinePhotograph className="w-3.5 h-3.5" />View
                         </a>
                       : <span className="text-slate-600 text-xs">—</span>

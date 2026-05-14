@@ -15,7 +15,7 @@ const LEAVE_TYPES = [
   { key: 'unpaid',        label: 'Unpaid Leave',        default: 0  },
 ]
 
-const TEAL = '#4BBFBF'
+const TEAL = '#f97316'
 
 export default function LeaveAllowancesPage() {
   const [employees, setEmployees] = useState([])
@@ -108,7 +108,7 @@ export default function LeaveAllowancesPage() {
               onClick={() => loadAllowances(emp)}
               className={`w-full text-left px-3 py-2.5 rounded-xl transition-all ${
                 selected?.id === emp.id
-                  ? 'bg-[#4BBFBF]/15 border border-[#4BBFBF]/25 text-[#4BBFBF]'
+                  ? 'bg-[#f97316]/15 border border-orange-500/25 text-[#f97316]'
                   : 'hover:bg-white/[0.05] text-slate-300'
               }`}>
               <div className="font-medium text-sm">{emp.full_name}</div>
@@ -158,7 +158,7 @@ export default function LeaveAllowancesPage() {
 
             {loading ? (
               <div className="flex justify-center py-10">
-                <div className="w-7 h-7 border-2 border-[#4BBFBF]/30 border-t-[#4BBFBF] rounded-full animate-spin" />
+                <div className="w-7 h-7 border-2 border-orange-500/30 border-t-[#f97316] rounded-full animate-spin" />
               </div>
             ) : (
               <div className="space-y-3">
@@ -172,7 +172,7 @@ export default function LeaveAllowancesPage() {
                           <input type="checkbox"
                             checked={v.available_on_probation || false}
                             onChange={e => setVal(lt.key, 'available_on_probation', e.target.checked)}
-                            className="w-3.5 h-3.5 accent-[#4BBFBF]" />
+                            className="w-3.5 h-3.5 accent-[#f97316]" />
                           Available on probation
                         </label>
                       </div>

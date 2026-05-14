@@ -18,8 +18,8 @@ const REMOVAL_REASONS = [
   ['other',             'Other'],
 ]
 const REMOVAL_REASON_LABELS = Object.fromEntries(REMOVAL_REASONS)
-const inp2 = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50'
-const TEAL = '#4BBFBF'
+const inp2 = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50'
+const TEAL = '#f97316'
 
 // ── Archive confirm modal ─────────────────────────────────────────────────────
 function ArchiveModal({ title, description, onArchive, onClose }) {
@@ -75,9 +75,9 @@ function CustomerBadge({ name, label = 'Assigned to' }) {
   return (
     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium"
       style={{ background: 'rgba(75,191,191,0.1)', border: '1px solid rgba(75,191,191,0.2)' }}>
-      <HiOutlineUser className="w-3.5 h-3.5 text-[#4BBFBF]" />
+      <HiOutlineUser className="w-3.5 h-3.5 text-[#f97316]" />
       <span className="text-slate-400">{label}:</span>
-      <span className="text-[#4BBFBF] font-semibold">{name}</span>
+      <span className="text-[#f97316] font-semibold">{name}</span>
     </span>
   )
 }
@@ -197,7 +197,7 @@ function DATAccountConflict({ account, onResolved }) {
             </button>
             <button onClick={() => resolve('accept_mongo')} disabled={saving}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-[#0e1420] font-semibold"
-              style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+              style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
               <HiOutlineArrowRight className="w-4 h-4" /> Accept MongoDB version
             </button>
           </>
@@ -282,7 +282,7 @@ function MongoUserConflict({ user, onResolved }) {
           <div className="text-red-300 font-semibold text-sm mb-1">Not found in latest MongoDB sync</div>
           <div className="text-slate-400 text-sm">
             {user.assigned_customer_name ? (
-              <>Customer <span className="text-[#4BBFBF] font-semibold">{user.assigned_customer_name}</span> has this user assigned to their active seat.</>
+              <>Customer <span className="text-[#f97316] font-semibold">{user.assigned_customer_name}</span> has this user assigned to their active seat.</>
             ) : 'No active customer seat is currently assigned to this user.'}
             {' '}They may have been deleted, renamed, or moved.
           </div>
@@ -335,7 +335,7 @@ function MongoUserConflict({ user, onResolved }) {
             </button>
             <button onClick={() => resolve('accept_mongo')} disabled={saving}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-[#0e1420] font-semibold"
-              style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+              style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
               <HiOutlineArrowRight className="w-4 h-4" /> Accept MongoDB version
             </button>
             <button onClick={() => setArchiveModal(true)} disabled={saving}
@@ -369,7 +369,7 @@ const RESOLUTION_LABELS = {
 function ResolvedRecordCard({ record }) {
   const [expanded, setExpanded] = useState(false)
   const isAccount   = record.record_type === 'dat_account'
-  const typeColor   = isAccount ? 'text-[#4BBFBF]' : 'text-purple-400'
+  const typeColor   = isAccount ? 'text-[#f97316]' : 'text-purple-400'
   const typeBg      = isAccount ? 'rgba(75,191,191,0.1)' : 'rgba(139,92,246,0.1)'
   const typeBorder  = isAccount ? 'rgba(75,191,191,0.2)' : 'rgba(139,92,246,0.2)'
   const seats       = record.seat_pricing || []
@@ -395,7 +395,7 @@ function ResolvedRecordCard({ record }) {
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${resolution.color}`}>
                 {resolution.label}
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ background: typeBg, color: isAccount ? '#4BBFBF' : '#a78bfa' }}>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium" style={{ background: typeBg, color: isAccount ? '#f97316' : '#a78bfa' }}>
                 {isAccount ? 'DAT Account' : 'DAT User'}
               </span>
             </div>
@@ -410,9 +410,9 @@ function ResolvedRecordCard({ record }) {
               {record.customer_name && (
                 <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-xs"
                   style={{ background: 'rgba(75,191,191,0.08)', border: '1px solid rgba(75,191,191,0.15)' }}>
-                  <HiOutlineUser className="w-3 h-3 text-[#4BBFBF]" />
+                  <HiOutlineUser className="w-3 h-3 text-[#f97316]" />
                   <span className="text-slate-400">Was assigned to:</span>
-                  <span className="text-[#4BBFBF] font-semibold">{record.customer_name}</span>
+                  <span className="text-[#f97316] font-semibold">{record.customer_name}</span>
                 </span>
               )}
             </div>
@@ -608,7 +608,7 @@ export default function ConflictsPage({ user }) {
           </button>
           <button onClick={runDiagnosis} disabled={diagLoading}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
-            style={{ background: 'rgba(75,191,191,0.15)', border: '1px solid rgba(75,191,191,0.3)', color: '#4BBFBF' }}>
+            style={{ background: 'rgba(75,191,191,0.15)', border: '1px solid rgba(75,191,191,0.3)', color: '#f97316' }}>
             <HiOutlineInformationCircle className={'w-4 h-4 ' + (diagLoading ? 'animate-spin' : '')} />
             {diagLoading ? 'Diagnosing…' : 'Run Diagnosis'}
           </button>
@@ -650,7 +650,7 @@ export default function ConflictsPage({ user }) {
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             {[
-              { label: 'MongoDB Users', value: diagnosis.collection_counts?.users || 0, color: 'text-[#4BBFBF]' },
+              { label: 'MongoDB Users', value: diagnosis.collection_counts?.users || 0, color: 'text-[#f97316]' },
               { label: 'MongoDB Permissions', value: diagnosis.collection_counts?.permissions || 0, color: 'text-purple-400' },
               { label: 'Users WITH Permission', value: diagnosis.user_perm_match?.users_with_perm || 0, color: 'text-emerald-400' },
               { label: 'Users WITHOUT Permission', value: diagnosis.user_perm_match?.users_without_perm || 0, color: 'text-orange-400' },
@@ -708,7 +708,7 @@ export default function ConflictsPage({ user }) {
             onClick={() => setActiveTab(t.id)}
             className={'flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-medium transition-all ' +
               (activeTab === t.id
-                ? t.id === 'resolved' ? 'text-emerald-400' : 'text-[#4BBFBF]'
+                ? t.id === 'resolved' ? 'text-emerald-400' : 'text-[#f97316]'
                 : 'text-slate-400 hover:text-white border border-white/10')}
             style={activeTab === t.id ? {
               background: t.id === 'resolved' ? 'rgba(16,185,129,0.12)' : 'rgba(75,191,191,0.12)',
@@ -733,7 +733,7 @@ export default function ConflictsPage({ user }) {
               <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input value={resolvedSearch} onChange={e => setResolvedSearch(e.target.value)}
                 placeholder="Search name, email, customer…"
-                className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+                className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
             </div>
             <select value={resolvedFilter} onChange={e => setResolvedFilter(e.target.value)}
               className="bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm">
@@ -775,7 +775,7 @@ export default function ConflictsPage({ user }) {
             <div className="relative">
               <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name or email…"
-                className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+                className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
             </div>
           )}
 

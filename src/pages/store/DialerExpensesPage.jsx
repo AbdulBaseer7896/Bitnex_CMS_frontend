@@ -7,8 +7,8 @@ import {
   HiOutlineCalendar, HiOutlineExclamation,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
-const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50'
+const TEAL = '#f97316'
+const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50'
 
 const DIALER_TYPES = [
   ['google_voice','Google Voice'],['ring_central','Ring Central'],
@@ -29,7 +29,7 @@ const EXPIRY_COLORS = {
 const DIALER_BADGES = {
   google_voice: 'bg-blue-500/15 text-blue-400',
   ring_central: 'bg-orange-500/15 text-orange-400',
-  nux_call: 'bg-[#4BBFBF]/15 text-[#4BBFBF]',
+  nux_call: 'bg-[#f97316]/15 text-[#f97316]',
   vonage: 'bg-red-500/15 text-red-400',
   mighty_call: 'bg-purple-500/15 text-purple-400',
   twilio: 'bg-pink-500/15 text-pink-400',
@@ -132,19 +132,19 @@ function ExpenseModal({ expense, onClose, onSaved }) {
           <div>
             <label className="text-slate-400 text-xs mb-2 block font-medium">Receipt / Invoice</label>
             {receipt ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#4BBFBF]/10 border border-[#4BBFBF]/20">
-                <HiOutlineReceiptTax className="w-4 h-4 text-[#4BBFBF]" />
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#f97316]/10 border border-orange-500/20">
+                <HiOutlineReceiptTax className="w-4 h-4 text-[#f97316]" />
                 <span className="text-slate-300 text-sm flex-1 truncate">{receipt.name}</span>
                 <button onClick={() => setReceipt(null)} className="text-slate-500 hover:text-red-400"><HiOutlineX className="w-4 h-4" /></button>
               </div>
             ) : (
-              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-[#4BBFBF]/40 text-sm">
+              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-orange-500/40 text-sm">
                 <HiOutlineReceiptTax className="w-5 h-5" /> Upload receipt
                 <input type="file" accept="image/*,.pdf" className="hidden" onChange={e => setReceipt(e.target.files[0])} />
               </label>
             )}
             {isEdit && expense.receipt && !receipt && (
-              <a href={expense.receipt} target="_blank" rel="noreferrer" className="text-[#4BBFBF] text-xs mt-1 hover:underline block">
+              <a href={expense.receipt} target="_blank" rel="noreferrer" className="text-[#f97316] text-xs mt-1 hover:underline block">
                 View current receipt
               </a>
             )}
@@ -154,7 +154,7 @@ function ExpenseModal({ expense, onClose, onSaved }) {
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
           <button onClick={save} disabled={saving}
             className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Saving…' : (isEdit ? 'Update' : 'Record Expense')}
           </button>
         </div>
@@ -220,7 +220,7 @@ export default function DialerExpensesPage() {
           </button>
           <button onClick={() => setModal('new')}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             <HiOutlinePlus className="w-4 h-4" /> Record Expense
           </button>
         </div>
@@ -229,7 +229,7 @@ export default function DialerExpensesPage() {
       {/* Summary */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="glass-light rounded-2xl p-4" style={{ border: '1px solid rgba(75,191,191,0.12)' }}>
-          <div className="text-2xl font-bold text-[#4BBFBF]">PKR {totalSpent.toLocaleString()}</div>
+          <div className="text-2xl font-bold text-[#f97316]">PKR {totalSpent.toLocaleString()}</div>
           <div className="text-white text-xs font-medium mt-0.5">Total Spent</div>
           <div className="text-slate-500 text-xs">{expenses.length} records</div>
         </div>
@@ -256,7 +256,7 @@ export default function DialerExpensesPage() {
           <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <input value={search} onChange={e => { setSearch(e.target.value); setPage(1) }}
             placeholder="Search description, email, notes…"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
         </div>
         <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
           className="bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm">
@@ -310,7 +310,7 @@ export default function DialerExpensesPage() {
                 <div className="flex flex-col gap-2 flex-shrink-0">
                   {e.receipt && (
                     <a href={e.receipt} target="_blank" rel="noreferrer"
-                      className="flex items-center gap-1 text-[#4BBFBF] text-xs hover:underline">
+                      className="flex items-center gap-1 text-[#f97316] text-xs hover:underline">
                       <HiOutlineReceiptTax className="w-3.5 h-3.5" /> Receipt
                     </a>
                   )}

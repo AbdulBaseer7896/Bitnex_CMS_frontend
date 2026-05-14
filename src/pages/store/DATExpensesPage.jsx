@@ -3,8 +3,8 @@ import api from '../../api/client'
 import toast from 'react-hot-toast'
 import { HiOutlinePlus, HiOutlineX, HiOutlineRefresh, HiOutlineSearch, HiOutlinePencil } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
-const inp = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50"
+const TEAL = '#f97316'
+const inp = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50"
 const EXPENSE_TYPES = [
   ['account_purchase','Account Purchase'],['proxy_renewal','Proxy Renewal'],
   ['proxy_purchase','Proxy Purchase'],['subscription_renewal','Subscription Renewal'],['other','Other'],
@@ -87,12 +87,12 @@ function ExpenseModal({ expense, accounts, onClose, onSaved }) {
           <div>
             <label className="text-slate-400 text-xs mb-2 block font-medium">Receipt</label>
             {receipt ? (
-              <div className="flex items-center gap-2 p-2 rounded-lg bg-[#4BBFBF]/10 text-sm">
+              <div className="flex items-center gap-2 p-2 rounded-lg bg-[#f97316]/10 text-sm">
                 <span className="text-slate-300 flex-1 truncate">{receipt.name}</span>
                 <button onClick={()=>setReceipt(null)} className="text-slate-500 hover:text-red-400"><HiOutlineX className="w-4 h-4"/></button>
               </div>
             ) : (
-              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-[#4BBFBF]/40 text-sm">
+              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-orange-500/40 text-sm">
                 Upload receipt (optional)
                 <input type="file" accept="image/*,.pdf" className="hidden" onChange={e=>setReceipt(e.target.files[0])}/>
               </label>
@@ -101,7 +101,7 @@ function ExpenseModal({ expense, accounts, onClose, onSaved }) {
         </div>
         <div className="flex gap-3 p-5 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
-          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving?'Saving…':(isEdit?'Update':'Add Expense')}
           </button>
         </div>
@@ -155,7 +155,7 @@ export default function DATExpensesPage({ user }) {
         <div className="flex gap-2">
           <button onClick={load} className="p-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white"><HiOutlineRefresh className="w-5 h-5"/></button>
           {canManage && (
-            <button onClick={()=>setModal('new')} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            <button onClick={()=>setModal('new')} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
               <HiOutlinePlus className="w-4 h-4"/> Add Expense
             </button>
           )}
@@ -183,7 +183,7 @@ export default function DATExpensesPage({ user }) {
         <div className="relative flex-1 min-w-48">
           <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"/>
           <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search…"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50"/>
+            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50"/>
         </div>
         <select value={accountFilter} onChange={e=>setAccountFilter(e.target.value)} className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm">
           <option value="" className="bg-[#0e1420]">All Accounts</option>

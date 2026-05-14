@@ -5,7 +5,7 @@ import {
   HiOutlinePlus, HiOutlinePencil, HiOutlineX, HiOutlineRefresh,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
+const TEAL = '#f97316'
 const STATUS_COLORS = {
   pending: 'bg-yellow-500/15 text-yellow-400',
   active: 'bg-emerald-500/15 text-emerald-400',
@@ -71,7 +71,7 @@ function SubModal({ sub, customers, products, onClose, onSaved }) {
           <div>
             <label className="text-slate-400 text-sm mb-1 block">Customer *</label>
             <select value={form.customer} onChange={e => f('customer', e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
               <option value="" className="bg-[#0e1420]">— Select Customer —</option>
               {customers.map(c => <option key={c.id} value={c.id} className="bg-[#0e1420]">{c.contact_person}{c.company_name ? ` (${c.company_name})` : ''}</option>)}
             </select>
@@ -79,7 +79,7 @@ function SubModal({ sub, customers, products, onClose, onSaved }) {
           <div>
             <label className="text-slate-400 text-sm mb-1 block">Product *</label>
             <select value={form.product} onChange={e => handleProductChange(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
               <option value="" className="bg-[#0e1420]">— Select Product —</option>
               {products.map(p => <option key={p.id} value={p.id} className="bg-[#0e1420]">{p.name} ({p.currency} {p.base_price})</option>)}
             </select>
@@ -88,25 +88,25 @@ function SubModal({ sub, customers, products, onClose, onSaved }) {
             <div>
               <label className="text-slate-400 text-sm mb-1 block">Agreed Price</label>
               <input type="number" value={form.agreed_price} onChange={e => f('agreed_price', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50" />
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50" />
             </div>
             <div>
               <label className="text-slate-400 text-sm mb-1 block">Currency</label>
               <select value={form.currency} onChange={e => f('currency', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
                 {['PKR','USD','GBP','EUR','AED'].map(c => <option key={c} value={c} className="bg-[#0e1420]">{c}</option>)}
               </select>
             </div>
             <div>
               <label className="text-slate-400 text-sm mb-1 block">Discount %</label>
               <input type="number" min="0" max="100" value={form.discount} onChange={e => f('discount', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50" />
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50" />
             </div>
           </div>
           <div>
             <label className="text-slate-400 text-sm mb-1 block">Status</label>
             <select value={form.status} onChange={e => f('status', e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
               {['pending','active','paused','cancelled','expired'].map(s => (
                 <option key={s} value={s} className="bg-[#0e1420]">{s.charAt(0).toUpperCase()+s.slice(1)}</option>
               ))}
@@ -117,21 +117,21 @@ function SubModal({ sub, customers, products, onClose, onSaved }) {
               <div key={k}>
                 <label className="text-slate-400 text-sm mb-1 block">{l}</label>
                 <input type="date" value={form[k]} onChange={e => f(k, e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50" />
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50" />
               </div>
             ))}
           </div>
           <div>
             <label className="text-slate-400 text-sm mb-1 block">Notes</label>
             <textarea value={form.notes} onChange={e => f('notes', e.target.value)} rows={2}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50" />
           </div>
         </div>
         <div className="flex gap-3 p-6 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white">Cancel</button>
           <button onClick={save} disabled={saving}
             className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold"
-            style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Saving…' : (isEdit ? 'Update' : 'Create')}
           </button>
         </div>
@@ -177,7 +177,7 @@ export default function SubscriptionsPage({ user }) {
         </div>
         <div className="flex gap-3">
           <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#4BBFBF]/50">
+            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500/50">
             <option value="" className="bg-[#0e1420]">All Status</option>
             {['pending','active','paused','cancelled','expired'].map(s => (
               <option key={s} value={s} className="bg-[#0e1420]">{s}</option>
@@ -189,7 +189,7 @@ export default function SubscriptionsPage({ user }) {
           {canManage && (
             <button onClick={() => setModal('new')}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold"
-              style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+              style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
               <HiOutlinePlus className="w-4 h-4" /> New Subscription
             </button>
           )}
@@ -224,7 +224,7 @@ export default function SubscriptionsPage({ user }) {
                     </td>
                     <td className="px-4 py-3 text-slate-300 text-sm">{s.currency} {parseFloat(s.agreed_price).toLocaleString()}</td>
                     <td className="px-4 py-3 text-slate-500 text-sm">{s.discount ? `${s.discount}%` : '—'}</td>
-                    <td className="px-4 py-3 text-[#4BBFBF] font-medium text-sm">{s.currency} {finalPrice.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-[#f97316] font-medium text-sm">{s.currency} {finalPrice.toLocaleString()}</td>
                     <td className="px-4 py-3 text-slate-500 text-sm">{s.start_date || '—'}</td>
                     <td className="px-4 py-3 text-slate-500 text-sm">{s.next_billing_date || '—'}</td>
                     <td className="px-4 py-3">

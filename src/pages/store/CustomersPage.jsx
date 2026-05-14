@@ -10,8 +10,8 @@ import {
   HiOutlineBan, HiOutlineCheckCircle,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
-const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50'
+const TEAL = '#f97316'
+const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50'
 
 const EXPIRY_COLORS = {
   expired:       'text-red-400 bg-red-500/15 border-red-500/20',
@@ -98,7 +98,7 @@ function CustomerModal({ customer, salesUsers, onClose, onSaved }) {
             <div>
               <label className="flex items-center gap-2 cursor-pointer mb-3">
                 <div onClick={()=>f('create_login',!form.create_login)}
-                  className={'w-10 h-5 rounded-full relative transition-colors '+(form.create_login?'bg-[#4BBFBF]':'bg-white/10')}>
+                  className={'w-10 h-5 rounded-full relative transition-colors '+(form.create_login?'bg-[#f97316]':'bg-white/10')}>
                   <div className={'absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all '+(form.create_login?'left-5':'left-0.5')}/>
                 </div>
                 <span className="text-slate-300 text-sm font-medium">Create Portal Login Account</span>
@@ -118,7 +118,7 @@ function CustomerModal({ customer, salesUsers, onClose, onSaved }) {
         </div>
         <div className="flex gap-3 p-6 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
-          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Saving…' : isEdit ? 'Save Changes' : 'Add Customer'}
           </button>
         </div>
@@ -227,7 +227,7 @@ function EditSeatModal({ seat, customers, onClose, onSaved }) {
             <p className="text-slate-500 text-xs mt-0.5">
               <span className="text-white">{seat.mongo_user_name}</span>
               <span className="text-slate-600"> · </span>
-              <span className="text-[#4BBFBF]">{seat.customer_name}</span>
+              <span className="text-[#f97316]">{seat.customer_name}</span>
             </p>
           </div>
           <button onClick={onClose}><HiOutlineX className="w-5 h-5 text-slate-400" /></button>
@@ -236,7 +236,7 @@ function EditSeatModal({ seat, customers, onClose, onSaved }) {
         {/* Mode tabs */}
         <div className="flex gap-1 m-4 mb-0 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }}>
           {[
-            { id: 'edit', label: 'Edit', icon: HiOutlinePencil, active: 'text-[#4BBFBF]', activeBg: 'rgba(75,191,191,0.12)', activeBorder: 'rgba(75,191,191,0.2)' },
+            { id: 'edit', label: 'Edit', icon: HiOutlinePencil, active: 'text-[#f97316]', activeBg: 'rgba(75,191,191,0.12)', activeBorder: 'rgba(75,191,191,0.2)' },
             { id: 'reassign', label: 'Reassign', icon: HiOutlineSwitchHorizontal, active: 'text-orange-400', activeBg: 'rgba(249,115,22,0.12)', activeBorder: 'rgba(249,115,22,0.2)' },
             { id: 'remove', label: 'Remove', icon: HiOutlineTrash, active: 'text-red-400', activeBg: 'rgba(239,68,68,0.12)', activeBorder: 'rgba(239,68,68,0.2)' },
           ].map(t => {
@@ -280,7 +280,7 @@ function EditSeatModal({ seat, customers, onClose, onSaved }) {
               <input value={form.notes} onChange={e=>f('notes',e.target.value)} className={inp} />
             </div>
             <label className="flex items-center gap-2 cursor-pointer">
-              <div onClick={()=>f('is_active',!form.is_active)} className={'w-10 h-5 rounded-full relative transition-colors '+(form.is_active?'bg-[#4BBFBF]':'bg-white/10')}>
+              <div onClick={()=>f('is_active',!form.is_active)} className={'w-10 h-5 rounded-full relative transition-colors '+(form.is_active?'bg-[#f97316]':'bg-white/10')}>
                 <div className={'absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all '+(form.is_active?'left-5':'left-0.5')}/>
               </div>
               <span className="text-slate-300 text-sm">Active Seat</span>
@@ -318,11 +318,11 @@ function EditSeatModal({ seat, customers, onClose, onSaved }) {
             </div>
             {newCustomer && (
               <div className="flex items-center gap-2 p-3 rounded-xl text-xs" style={{ background: 'rgba(75,191,191,0.08)', border: '1px solid rgba(75,191,191,0.15)' }}>
-                <HiOutlineSwitchHorizontal className="w-4 h-4 text-[#4BBFBF] flex-shrink-0" />
+                <HiOutlineSwitchHorizontal className="w-4 h-4 text-[#f97316] flex-shrink-0" />
                 <span className="text-slate-400">
                   <span className="text-white font-medium">{seat.mongo_user_name}</span> will move from{' '}
                   <span className="text-red-400 font-medium">{seat.customer_name}</span> →{' '}
-                  <span className="text-[#4BBFBF] font-semibold">{(customers||[]).find(c=>String(c.id)===String(newCustomer))?.contact_person}</span>
+                  <span className="text-[#f97316] font-semibold">{(customers||[]).find(c=>String(c.id)===String(newCustomer))?.contact_person}</span>
                 </span>
               </div>
             )}
@@ -345,7 +345,7 @@ function EditSeatModal({ seat, customers, onClose, onSaved }) {
         <div className="flex gap-3 p-5 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
           {mode === 'edit' && (
-            <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
               {saving ? 'Saving…' : 'Save Changes'}
             </button>
           )}
@@ -410,7 +410,7 @@ function AssignSeatModal({ customer, onClose, onSaved }) {
         <div className="flex items-center justify-between p-5 border-b border-white/10 flex-shrink-0">
           <div>
             <h3 className="text-white font-bold">Assign DAT Seat</h3>
-            <p className="text-slate-500 text-xs mt-0.5">Assign an unassigned user to <span className="text-[#4BBFBF]">{customer.contact_person}</span></p>
+            <p className="text-slate-500 text-xs mt-0.5">Assign an unassigned user to <span className="text-[#f97316]">{customer.contact_person}</span></p>
           </div>
           <button onClick={onClose}><HiOutlineX className="w-5 h-5 text-slate-400" /></button>
         </div>
@@ -418,7 +418,7 @@ function AssignSeatModal({ customer, onClose, onSaved }) {
         <div className="p-5 space-y-3 overflow-y-auto flex-1">
           <div className="relative">
             <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search user name or email…" className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search user name or email…" className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
           </div>
 
           {loading ? (
@@ -431,14 +431,14 @@ function AssignSeatModal({ customer, onClose, onSaved }) {
                 <div key={u.id} onClick={() => setSelected(u)}
                   className={'flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ' + (selected?.id === u.id ? 'border' : 'border border-transparent hover:bg-white/5')}
                   style={selected?.id === u.id ? { background: 'rgba(75,191,191,0.1)', borderColor: 'rgba(75,191,191,0.3)' } : {}}>
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-[#0e1420] flex-shrink-0" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-[#0e1420] flex-shrink-0" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
                     {(u.name?.[0]||'?').toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-white text-sm font-medium truncate">{u.name}</div>
                     <div className="text-slate-500 text-xs truncate">{u.email} · {u.dat_account_name||'No account'}</div>
                   </div>
-                  {selected?.id === u.id && <HiOutlineCheck className="w-4 h-4 text-[#4BBFBF] flex-shrink-0" />}
+                  {selected?.id === u.id && <HiOutlineCheck className="w-4 h-4 text-[#f97316] flex-shrink-0" />}
                 </div>
               ))}
             </div>
@@ -464,7 +464,7 @@ function AssignSeatModal({ customer, onClose, onSaved }) {
 
         <div className="flex gap-3 p-5 pt-0 flex-shrink-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
-          <button onClick={save} disabled={saving||!selected} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm disabled:opacity-40" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+          <button onClick={save} disabled={saving||!selected} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm disabled:opacity-40" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Assigning…' : 'Assign Seat'}
           </button>
         </div>
@@ -508,7 +508,7 @@ function CustomerDetail({ customer, canManage, canReset, customers, onEdit, onRe
       <div className="glass-light rounded-2xl p-4" style={{ border: '1px solid rgba(75,191,191,0.12)' }}>
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-lg text-[#0e1420]" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-lg text-[#0e1420]" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
               {(customer.contact_person?.[0]||'?').toUpperCase()}
             </div>
             <div>
@@ -546,7 +546,7 @@ function CustomerDetail({ customer, canManage, canReset, customers, onEdit, onRe
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-2">
           {[
-            { label: 'Active Seats', value: activeSeats.length, color: 'text-[#4BBFBF]' },
+            { label: 'Active Seats', value: activeSeats.length, color: 'text-[#f97316]' },
             { label: 'Monthly Rev', value: `PKR ${totalRevenue.toLocaleString()}`, color: 'text-emerald-400' },
             { label: 'Expired', value: expiredSeats.length, color: expiredSeats.length > 0 ? 'text-red-400' : 'text-slate-500' },
           ].map(s=>(
@@ -567,7 +567,7 @@ function CustomerDetail({ customer, canManage, canReset, customers, onEdit, onRe
           {canManage && (
             <button onClick={() => setAssignModal(true)}
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#0e1420]"
-              style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+              style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
               <HiOutlinePlus className="w-3.5 h-3.5" /> Assign
             </button>
           )}
@@ -577,7 +577,7 @@ function CustomerDetail({ customer, canManage, canReset, customers, onEdit, onRe
           <div className="relative mb-2">
             <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
             <input value={seatSearch} onChange={e=>setSeatSearch(e.target.value)} placeholder="Search seats…"
-              className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-white text-xs focus:outline-none focus:border-[#4BBFBF]/50" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-white text-xs focus:outline-none focus:border-orange-500/50" />
           </div>
         )}
 
@@ -592,7 +592,7 @@ function CustomerDetail({ customer, canManage, canReset, customers, onEdit, onRe
             {filteredSeats.map(s => (
               <div key={s.id} className="glass-light rounded-xl p-3" style={{ border: `1px solid ${s.expiry_status==='expired'?'rgba(239,68,68,0.2)':s.expiry_status==='expiring_soon'?'rgba(249,115,22,0.2)':'rgba(255,255,255,0.06)'}` }}>
                 <div className="flex items-start gap-2">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-[#0e1420] flex-shrink-0 mt-0.5" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-[#0e1420] flex-shrink-0 mt-0.5" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
                     {(s.mongo_user_name?.[0]||'?').toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -700,7 +700,7 @@ export default function CustomersPage({ user }) {
           {canManage && (
             <button onClick={() => setModal('new')}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-              style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+              style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
               <HiOutlinePlus className="w-4 h-4" /> Add Customer
             </button>
           )}
@@ -713,7 +713,7 @@ export default function CustomersPage({ user }) {
           {[
             { label: 'Total', value: summary.total, color: 'text-white' },
             { label: 'Active', value: summary.active, color: 'text-emerald-400' },
-            { label: 'With Login', value: summary.with_login, color: 'text-[#4BBFBF]' },
+            { label: 'With Login', value: summary.with_login, color: 'text-[#f97316]' },
             { label: 'Revenue', value: `PKR ${parseFloat(summary.total_revenue||0).toLocaleString()}`, color: 'text-purple-400' },
           ].map(s => (
             <div key={s.label} className="glass-light rounded-xl p-3" style={{ border: '1px solid rgba(75,191,191,0.08)' }}>
@@ -733,7 +733,7 @@ export default function CustomersPage({ user }) {
             <div className="relative">
               <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search customers…"
-                className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+                className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-white text-sm focus:outline-none focus:border-orange-500/50" />
             </div>
           </div>
 
@@ -751,10 +751,10 @@ export default function CustomersPage({ user }) {
                 const hasExpired = (c.active_subscriptions === 0 && c.active_dat_seats === 0)
                 return (
                   <div key={c.id} onClick={() => setSelected(c)}
-                    className={'flex items-center gap-3 px-4 py-3 cursor-pointer border-b border-white/[0.04] transition-all ' + (isSelected ? 'bg-[#4BBFBF]/10' : 'hover:bg-white/[0.03]')}
-                    style={isSelected ? { borderLeft: '3px solid #4BBFBF' } : { borderLeft: '3px solid transparent' }}>
+                    className={'flex items-center gap-3 px-4 py-3 cursor-pointer border-b border-white/[0.04] transition-all ' + (isSelected ? 'bg-[#f97316]/10' : 'hover:bg-white/[0.03]')}
+                    style={isSelected ? { borderLeft: '3px solid #f97316' } : { borderLeft: '3px solid transparent' }}>
                     <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm text-[#0e1420] flex-shrink-0"
-                      style={{ background: isSelected ? 'linear-gradient(135deg,#4BBFBF,#38A8A8)' : 'rgba(75,191,191,0.2)' }}>
+                      style={{ background: isSelected ? 'linear-gradient(135deg,#f97316,#ea580c)' : 'rgba(75,191,191,0.2)' }}>
                       {(c.contact_person?.[0]||'?').toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -765,7 +765,7 @@ export default function CustomersPage({ user }) {
                         {!c.is_active && <span className="text-red-400 text-[10px]">Inactive</span>}
                       </div>
                     </div>
-                    <HiOutlineChevronRight className={`w-4 h-4 flex-shrink-0 ${isSelected ? 'text-[#4BBFBF]' : 'text-slate-600'}`} />
+                    <HiOutlineChevronRight className={`w-4 h-4 flex-shrink-0 ${isSelected ? 'text-[#f97316]' : 'text-slate-600'}`} />
                   </div>
                 )
               })

@@ -6,8 +6,8 @@ import {
   HiOutlinePencil, HiOutlineReceiptTax, HiOutlineDatabase, HiOutlinePhone,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
-const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50'
+const TEAL = '#f97316'
+const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50'
 
 const EXPIRY_COLORS = {
   expired: 'bg-red-500/15 text-red-400',
@@ -30,7 +30,7 @@ const DIALER_TYPES = [
 ]
 const DIALER_BADGES = {
   google_voice:'bg-blue-500/15 text-blue-400', ring_central:'bg-orange-500/15 text-orange-400',
-  nux_call:'bg-[#4BBFBF]/15 text-[#4BBFBF]', vonage:'bg-red-500/15 text-red-400',
+  nux_call:'bg-[#f97316]/15 text-[#f97316]', vonage:'bg-red-500/15 text-red-400',
   mighty_call:'bg-purple-500/15 text-purple-400', twilio:'bg-pink-500/15 text-pink-400',
   other:'bg-slate-500/15 text-slate-400',
 }
@@ -96,22 +96,22 @@ function DATExpenseModal({ expense, accounts, onClose, onSaved }) {
           <div>
             <label className="text-slate-400 text-xs mb-2 block font-medium">Receipt</label>
             {receipt ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#4BBFBF]/10 border border-[#4BBFBF]/20">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#f97316]/10 border border-orange-500/20">
                 <span className="text-slate-300 text-sm flex-1 truncate">{receipt.name}</span>
                 <button onClick={()=>setReceipt(null)} className="text-slate-500 hover:text-red-400"><HiOutlineX className="w-4 h-4"/></button>
               </div>
             ) : (
-              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-[#4BBFBF]/40 text-sm">
+              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-orange-500/40 text-sm">
                 <HiOutlineReceiptTax className="w-5 h-5"/> Upload receipt
                 <input type="file" accept="image/*,.pdf" className="hidden" onChange={e=>setReceipt(e.target.files[0])}/>
               </label>
             )}
-            {isEdit && expense.receipt && !receipt && <a href={expense.receipt} target="_blank" rel="noreferrer" className="text-[#4BBFBF] text-xs mt-1 hover:underline block">View current receipt</a>}
+            {isEdit && expense.receipt && !receipt && <a href={expense.receipt} target="_blank" rel="noreferrer" className="text-[#f97316] text-xs mt-1 hover:underline block">View current receipt</a>}
           </div>
         </div>
         <div className="flex gap-3 p-5 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
-          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{background:'linear-gradient(135deg,#4BBFBF,#38A8A8)'}}>
+          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
             {saving?'Saving…':(isEdit?'Update':'Record')}
           </button>
         </div>
@@ -171,12 +171,12 @@ function DialerExpenseModal({ expense, onClose, onSaved }) {
           <div>
             <label className="text-slate-400 text-xs mb-2 block font-medium">Receipt</label>
             {receipt ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#4BBFBF]/10 border border-[#4BBFBF]/20">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#f97316]/10 border border-orange-500/20">
                 <span className="text-slate-300 text-sm flex-1 truncate">{receipt.name}</span>
                 <button onClick={()=>setReceipt(null)} className="text-slate-500 hover:text-red-400"><HiOutlineX className="w-4 h-4"/></button>
               </div>
             ) : (
-              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-[#4BBFBF]/40 text-sm">
+              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-orange-500/40 text-sm">
                 <HiOutlineReceiptTax className="w-5 h-5"/> Upload receipt
                 <input type="file" accept="image/*,.pdf" className="hidden" onChange={e=>setReceipt(e.target.files[0])}/>
               </label>
@@ -185,7 +185,7 @@ function DialerExpenseModal({ expense, onClose, onSaved }) {
         </div>
         <div className="flex gap-3 p-5 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
-          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{background:'linear-gradient(135deg,#4BBFBF,#38A8A8)'}}>
+          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
             {saving?'Saving…':(isEdit?'Update':'Record')}
           </button>
         </div>
@@ -207,7 +207,7 @@ function ExpenseRow({ e, type, onEdit }) {
             </span>
           )}
           {type === 'dat' && e.dat_account_name && (
-            <span className="px-2 py-0.5 rounded-full text-xs bg-[#4BBFBF]/10 text-[#4BBFBF]">{e.dat_account_name}</span>
+            <span className="px-2 py-0.5 rounded-full text-xs bg-[#f97316]/10 text-[#f97316]">{e.dat_account_name}</span>
           )}
           <span className="px-2 py-0.5 rounded-full text-xs bg-white/5 text-slate-400">
             {(type==='dat'?DAT_EXPENSE_TYPES:DIALER_EXPENSE_TYPES).find(([v])=>v===e.expense_type)?.[1]||e.expense_type}
@@ -227,7 +227,7 @@ function ExpenseRow({ e, type, onEdit }) {
         {e.notes && <div className="text-slate-600 text-xs mt-2 italic">{e.notes}</div>}
       </div>
       <div className="flex flex-col gap-2 flex-shrink-0">
-        {e.receipt && <a href={e.receipt} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#4BBFBF] text-xs hover:underline"><HiOutlineReceiptTax className="w-3.5 h-3.5"/> Receipt</a>}
+        {e.receipt && <a href={e.receipt} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#f97316] text-xs hover:underline"><HiOutlineReceiptTax className="w-3.5 h-3.5"/> Receipt</a>}
         <button onClick={()=>onEdit(e)} className="p-1.5 rounded-lg bg-white/5 text-slate-400 hover:text-white"><HiOutlinePencil className="w-4 h-4"/></button>
       </div>
     </div>
@@ -311,7 +311,7 @@ export default function ExpensesPage() {
           <button onClick={load} className="p-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white"><HiOutlineRefresh className="w-5 h-5"/></button>
           <button onClick={()=>setModal({type:tab,data:null})}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{background:'linear-gradient(135deg,#4BBFBF,#38A8A8)'}}>
+            style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
             <HiOutlinePlus className="w-4 h-4"/> Record {tab==='dat'?'DAT':'Dialer'} Expense
           </button>
         </div>
@@ -320,7 +320,7 @@ export default function ExpensesPage() {
       {/* Summary */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="glass-light rounded-2xl p-4" style={{border:'1px solid rgba(75,191,191,0.12)'}}>
-          <div className="text-xl font-bold text-[#4BBFBF]">PKR {datTotal.toLocaleString()}</div>
+          <div className="text-xl font-bold text-[#f97316]">PKR {datTotal.toLocaleString()}</div>
           <div className="text-white text-xs font-medium mt-0.5">DAT One Total</div>
           <div className="text-slate-500 text-xs">{datExpenses.length} records</div>
         </div>
@@ -346,7 +346,7 @@ export default function ExpensesPage() {
       {/* Tabs */}
       <div className="flex gap-1 p-1 rounded-xl" style={{background:'rgba(255,255,255,0.04)'}}>
         <button onClick={()=>changeTab('dat')}
-          className={'flex-1 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 '+(tab==='dat'?'text-[#4BBFBF]':'text-slate-400 hover:text-white')}
+          className={'flex-1 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 '+(tab==='dat'?'text-[#f97316]':'text-slate-400 hover:text-white')}
           style={tab==='dat'?{background:'rgba(75,191,191,0.12)',border:'1px solid rgba(75,191,191,0.2)'}:{}}>
           <HiOutlineDatabase className="w-4 h-4"/> DAT One Expenses
           <span className="text-[10px] opacity-70">({datExpenses.length})</span>
@@ -364,7 +364,7 @@ export default function ExpensesPage() {
         <div className="relative flex-1 min-w-48">
           <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"/>
           <input value={search} onChange={e=>{setSearch(e.target.value);setPage(1)}} placeholder="Search description, email, notes…"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50"/>
+            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50"/>
         </div>
         <select value={typeFilter} onChange={e=>{setTypeFilter(e.target.value);setPage(1)}}
           className="bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm">
@@ -404,7 +404,7 @@ export default function ExpensesPage() {
                   className="px-3 py-1.5 rounded-lg text-sm border border-white/10 text-slate-400 disabled:opacity-40 hover:bg-white/5">← Prev</button>
                 {Array.from({length:Math.min(totalPages,5)},(_,i)=>{
                   const pg=totalPages<=5?i+1:page<=3?i+1:page>=totalPages-2?totalPages-4+i:page-2+i
-                  return <button key={pg} onClick={()=>setPage(pg)} className={'px-3 py-1.5 rounded-lg text-sm '+(pg===page?'text-[#4BBFBF] border border-[#4BBFBF]/30':'border border-white/10 text-slate-400 hover:bg-white/5')}>{pg}</button>
+                  return <button key={pg} onClick={()=>setPage(pg)} className={'px-3 py-1.5 rounded-lg text-sm '+(pg===page?'text-[#f97316] border border-orange-500/30':'border border-white/10 text-slate-400 hover:bg-white/5')}>{pg}</button>
                 })}
                 <button onClick={()=>setPage(p=>Math.min(totalPages,p+1))} disabled={page===totalPages}
                   className="px-3 py-1.5 rounded-lg text-sm border border-white/10 text-slate-400 disabled:opacity-40 hover:bg-white/5">Next →</button>

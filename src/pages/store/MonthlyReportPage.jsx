@@ -3,7 +3,7 @@ import api from '../../api/client'
 import toast from 'react-hot-toast'
 import { HiOutlineDownload, HiOutlineRefresh, HiOutlineChartBar, HiOutlineCalendar } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
+const TEAL = '#f97316'
 
 export default function MonthlyReportPage({ user }) {
   const now = new Date()
@@ -76,7 +76,7 @@ export default function MonthlyReportPage({ user }) {
         <div className="flex gap-2">
           <button onClick={load} className="p-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white"><HiOutlineRefresh className="w-5 h-5"/></button>
           {report && (
-            <button onClick={downloadCSV} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#4BBFBF]/30 text-[#4BBFBF] text-sm font-medium hover:bg-[#4BBFBF]/10">
+            <button onClick={downloadCSV} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-orange-500/30 text-[#f97316] text-sm font-medium hover:bg-[#f97316]/10">
               <HiOutlineDownload className="w-4 h-4"/> Download CSV
             </button>
           )}
@@ -85,7 +85,7 @@ export default function MonthlyReportPage({ user }) {
 
       {/* Period picker */}
       <div className="flex gap-3 items-center glass-light rounded-2xl p-4" style={{ border:'1px solid rgba(75,191,191,0.1)' }}>
-        <HiOutlineCalendar className="w-5 h-5 text-[#4BBFBF] flex-shrink-0"/>
+        <HiOutlineCalendar className="w-5 h-5 text-[#f97316] flex-shrink-0"/>
         <span className="text-slate-400 text-sm">Period:</span>
         <select value={year} onChange={e => setYear(parseInt(e.target.value))}
           className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none">
@@ -95,7 +95,7 @@ export default function MonthlyReportPage({ user }) {
           {MONTHS.map((m, i) => (
             <button key={i} onClick={() => setMonth(i+1)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${month===i+1 ? 'text-[#0e1420]' : 'text-slate-400 hover:text-white bg-white/5'}`}
-              style={month===i+1 ? { background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' } : {}}>
+              style={month===i+1 ? { background:'linear-gradient(135deg,#f97316,#ea580c)' } : {}}>
               {m}
             </button>
           ))}
@@ -110,7 +110,7 @@ export default function MonthlyReportPage({ user }) {
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             <MetricCard label="Revenue" value={`PKR ${parseFloat(report.revenue||0).toLocaleString()}`} color="text-emerald-400" sub={`${report.total_transactions} transactions`}/>
             <MetricCard label="Expenses" value={`PKR ${parseFloat(report.expenses||0).toLocaleString()}`} color="text-red-400"/>
-            <MetricCard label="Net Profit" value={`PKR ${parseFloat(report.profit||0).toLocaleString()}`} color={report.profit >= 0 ? 'text-[#4BBFBF]' : 'text-red-400'} bg={report.profit >= 0 ? 'rgba(75,191,191,0.08)' : 'rgba(239,68,68,0.06)'}/>
+            <MetricCard label="Net Profit" value={`PKR ${parseFloat(report.profit||0).toLocaleString()}`} color={report.profit >= 0 ? 'text-[#f97316]' : 'text-red-400'} bg={report.profit >= 0 ? 'rgba(75,191,191,0.08)' : 'rgba(239,68,68,0.06)'}/>
             <MetricCard label="Profit Margin" value={`${report.profit_margin||0}%`} color="text-purple-400"/>
             <MetricCard label="Pending Claims" value={report.pending_claims||0} color="text-yellow-400" sub="awaiting approval"/>
           </div>
@@ -118,7 +118,7 @@ export default function MonthlyReportPage({ user }) {
           {/* Customer breakdown */}
           <div className="glass-light rounded-2xl overflow-hidden" style={{ border:'1px solid rgba(75,191,191,0.1)' }}>
             <div className="px-5 py-4 border-b border-white/10 flex items-center gap-2">
-              <HiOutlineChartBar className="w-4 h-4 text-[#4BBFBF]"/>
+              <HiOutlineChartBar className="w-4 h-4 text-[#f97316]"/>
               <h3 className="text-white font-semibold text-sm">Customer Revenue</h3>
             </div>
             <table className="w-full">

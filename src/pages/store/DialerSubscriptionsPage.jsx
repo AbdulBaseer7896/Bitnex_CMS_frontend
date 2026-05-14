@@ -7,8 +7,8 @@ import {
   HiOutlineSearch, HiOutlinePhone, HiOutlineCreditCard,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
-const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50'
+const TEAL = '#f97316'
+const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50'
 
 const STATUS_COLORS = {
   active: 'bg-emerald-500/15 text-emerald-400',
@@ -34,7 +34,7 @@ const SMS_STATUS = [['active','Active'],['inactive','Inactive'],['pending','Pend
 const DIALER_BADGES = {
   google_voice: 'bg-blue-500/15 text-blue-400',
   ring_central: 'bg-orange-500/15 text-orange-400',
-  nux_call: 'bg-[#4BBFBF]/15 text-[#4BBFBF]',
+  nux_call: 'bg-[#f97316]/15 text-[#f97316]',
   vonage: 'bg-red-500/15 text-red-400',
   mighty_call: 'bg-purple-500/15 text-purple-400',
   twilio: 'bg-pink-500/15 text-pink-400',
@@ -90,7 +90,7 @@ function DialerModal({ sub, customers, onClose, onSaved }) {
             </select>
           </div>
           <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(75,191,191,0.05)', border: '1px solid rgba(75,191,191,0.12)' }}>
-            <h3 className="text-[#4BBFBF] text-xs font-semibold uppercase tracking-widest">Dialer Details</h3>
+            <h3 className="text-[#f97316] text-xs font-semibold uppercase tracking-widest">Dialer Details</h3>
             <div className="grid grid-cols-3 gap-3">
               {[['dialer_type','Type','select',DIALER_TYPES],['region','Region','select',REGIONS],['status','Status','select',['active','pending','temp_off','cancelled','expired'].map(s=>[s,s.replace('_',' ')])],
                 ['domain_email','Domain Email *','email',[]],['dialer_username','Username','text',[]],['domain','Domain','text',[]],
@@ -116,7 +116,7 @@ function DialerModal({ sub, customers, onClose, onSaved }) {
           <div className="grid grid-cols-4 gap-3">
             <div><label className="text-slate-400 text-xs mb-1 block font-medium">List Price</label><input type="number" value={form.list_price} onChange={e => { f('list_price',e.target.value); f('net_price', calcNet(e.target.value, form.discount)) }} className={inp} /></div>
             <div><label className="text-slate-400 text-xs mb-1 block font-medium">Discount</label><input type="number" value={form.discount} onChange={e => { f('discount',e.target.value); f('net_price', calcNet(form.list_price, e.target.value)) }} className={inp} /></div>
-            <div><label className="text-slate-400 text-xs mb-1 block font-medium">Net Price</label><input type="number" value={form.net_price} onChange={e => f('net_price', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[#4BBFBF] font-medium text-sm focus:outline-none focus:border-[#4BBFBF]/50" /></div>
+            <div><label className="text-slate-400 text-xs mb-1 block font-medium">Net Price</label><input type="number" value={form.net_price} onChange={e => f('net_price', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[#f97316] font-medium text-sm focus:outline-none focus:border-orange-500/50" /></div>
             <div><label className="text-slate-400 text-xs mb-1 block font-medium">Currency</label><select value={form.currency} onChange={e => f('currency', e.target.value)} className={inp}>{['PKR','USD','GBP','EUR','AED'].map(c=><option key={c} value={c} className="bg-[#0e1420]">{c}</option>)}</select></div>
           </div>
           <div className="grid grid-cols-3 gap-3">
@@ -128,7 +128,7 @@ function DialerModal({ sub, customers, onClose, onSaved }) {
         </div>
         <div className="flex gap-3 p-6 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
-          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Saving…' : (isEdit ? 'Update' : 'Create')}
           </button>
         </div>
@@ -154,7 +154,7 @@ function QuickPayDialerModal({ seats, onClose, onSaved }) {
   const [saving, setSaving] = useState(false)
   const f = (k, v) => setForm(p => ({ ...p, [k]: v }))
   const METHODS = ['bank_transfer','easypaisa','jazzcash','cash','stripe','paypal','other']
-  const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50'
+  const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50'
 
   const save = async () => {
     if (!form.claimed_amount || !form.payment_date) return toast.error('Amount and date required')
@@ -185,7 +185,7 @@ function QuickPayDialerModal({ seats, onClose, onSaved }) {
         </div>
         <div className="p-5 space-y-4">
           <div className="rounded-xl p-3 space-y-1.5" style={{ background: 'rgba(75,191,191,0.06)', border: '1px solid rgba(75,191,191,0.15)' }}>
-            <div className="text-[#4BBFBF] text-xs font-semibold uppercase tracking-widest mb-2">Paying for</div>
+            <div className="text-[#f97316] text-xs font-semibold uppercase tracking-widest mb-2">Paying for</div>
             {allSeats.map(s => (
               <div key={s.id} className="flex items-center justify-between text-sm">
                 <span className="text-slate-300">{s.domain_email}</span>
@@ -228,12 +228,12 @@ function QuickPayDialerModal({ seats, onClose, onSaved }) {
           <div>
             <label className="text-slate-400 text-xs mb-2 block font-medium">Payment Screenshot</label>
             {screenshot ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#4BBFBF]/10 border border-[#4BBFBF]/20">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#f97316]/10 border border-orange-500/20">
                 <span className="text-slate-300 text-sm flex-1 truncate">{screenshot.name}</span>
                 <button onClick={() => setScreenshot(null)} className="text-slate-500 hover:text-red-400"><HiOutlineX className="w-4 h-4"/></button>
               </div>
             ) : (
-              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-[#4BBFBF]/40 text-sm transition-colors">
+              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-orange-500/40 text-sm transition-colors">
                 Upload screenshot
                 <input type="file" accept="image/*" className="hidden" onChange={e => setScreenshot(e.target.files[0])} />
               </label>
@@ -244,7 +244,7 @@ function QuickPayDialerModal({ seats, onClose, onSaved }) {
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
           <button onClick={save} disabled={saving}
             className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Submitting…' : 'Submit Payment'}
           </button>
         </div>
@@ -320,7 +320,7 @@ export default function DialerSubscriptionsPage({ user }) {
             </button>
           )}
           {canManage && (
-            <button onClick={() => setModal('new')} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            <button onClick={() => setModal('new')} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
               <HiOutlinePlus className="w-4 h-4" /> Add Dialer Seat
             </button>
           )}
@@ -332,7 +332,7 @@ export default function DialerSubscriptionsPage({ user }) {
         <div className="flex gap-3 flex-wrap">
           <div className="glass-light rounded-xl px-3 py-2 text-sm"><span className="text-emerald-400 font-bold">{activeCount}</span> <span className="text-slate-400">Active</span></div>
           <div className="glass-light rounded-xl px-3 py-2 text-sm"><span className="text-red-400 font-bold">{expiredCount}</span> <span className="text-slate-400">Expired</span></div>
-          <div className="glass-light rounded-xl px-3 py-2 text-sm"><span className="text-[#4BBFBF] font-bold">{subs.length}</span> <span className="text-slate-400">Total</span></div>
+          <div className="glass-light rounded-xl px-3 py-2 text-sm"><span className="text-[#f97316] font-bold">{subs.length}</span> <span className="text-slate-400">Total</span></div>
         </div>
       )}
 
@@ -341,7 +341,7 @@ export default function DialerSubscriptionsPage({ user }) {
         <div className="relative flex-1 min-w-48">
           <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <input value={search} onChange={e => { setSearch(e.target.value); setPage(1) }} placeholder="Search customer, email, username…"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
         </div>
         {!isCustomer && (
           <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm">
@@ -427,7 +427,7 @@ export default function DialerSubscriptionsPage({ user }) {
                   className="px-3 py-1.5 rounded-lg text-sm border border-white/10 text-slate-400 disabled:opacity-40 hover:bg-white/5">← Prev</button>
                 {Array.from({length: Math.min(totalPages,7)}, (_,i) => {
                   const p = totalPages <= 7 ? i+1 : page <= 4 ? i+1 : page >= totalPages-3 ? totalPages-6+i : page-3+i
-                  return <button key={p} onClick={() => setPage(p)} className={'px-3 py-1.5 rounded-lg text-sm ' + (p===page ? 'text-[#4BBFBF] border border-[#4BBFBF]/30' : 'border border-white/10 text-slate-400 hover:bg-white/5')}>{p}</button>
+                  return <button key={p} onClick={() => setPage(p)} className={'px-3 py-1.5 rounded-lg text-sm ' + (p===page ? 'text-[#f97316] border border-orange-500/30' : 'border border-white/10 text-slate-400 hover:bg-white/5')}>{p}</button>
                 })}
                 <button onClick={() => setPage(p => Math.min(totalPages,p+1))} disabled={page===totalPages}
                   className="px-3 py-1.5 rounded-lg text-sm border border-white/10 text-slate-400 disabled:opacity-40 hover:bg-white/5">Next →</button>

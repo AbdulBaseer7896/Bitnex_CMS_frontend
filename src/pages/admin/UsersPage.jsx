@@ -7,11 +7,11 @@ import {
   HiOutlineEye, HiOutlineEyeOff,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
+const TEAL = '#f97316'
 
 const EMP_STATUS_COLORS = {
   probation:     'bg-amber-500/15 text-amber-400',
-  permanent:     'bg-[#4BBFBF]/15 text-[#4BBFBF]',
+  permanent:     'bg-[#f97316]/15 text-[#f97316]',
   contract:      'bg-sky-500/15 text-sky-400',
   notice_period: 'bg-red-500/15 text-red-400',
   resigned:      'bg-slate-500/15 text-slate-400',
@@ -19,7 +19,7 @@ const EMP_STATUS_COLORS = {
 }
 
 const ROLE_COLORS = {
-  admin:      'bg-[#4BBFBF]/20 text-[#4BBFBF]',
+  admin:      'bg-[#f97316]/20 text-[#f97316]',
   hr:         'bg-violet-500/20 text-violet-400',
   accountant: 'bg-emerald-500/20 text-emerald-400',
   employee:   'bg-sky-500/20 text-sky-400',
@@ -42,7 +42,7 @@ function Toggle({ on, onChange }) {
     <button type="button" onClick={onChange} className="transition-opacity hover:opacity-80 flex-shrink-0">
       {on ? (
         <svg width="42" height="22" viewBox="0 0 42 22" fill="none">
-          <rect width="42" height="22" rx="11" fill="#4BBFBF"/><circle cx="31" cy="11" r="8" fill="white"/>
+          <rect width="42" height="22" rx="11" fill="#f97316"/><circle cx="31" cy="11" r="8" fill="white"/>
         </svg>
       ) : (
         <svg width="42" height="22" viewBox="0 0 42 22" fill="none">
@@ -99,10 +99,10 @@ function EditModal({ user, departments, onClose, onSave }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
       <div className="glass-light rounded-3xl w-full max-w-2xl animate-slide-up my-4">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#4BBFBF]/10">
+        <div className="flex items-center justify-between p-6 border-b border-orange-500/10">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-[#0e1420] text-lg"
-                 style={{background:'linear-gradient(135deg,#4BBFBF,#38A8A8)'}}>
+                 style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
               {(user.first_name?.[0]||user.username?.[0]||'U').toUpperCase()}
             </div>
             <div>
@@ -114,10 +114,10 @@ function EditModal({ user, departments, onClose, onSave }) {
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-[#4BBFBF]/10 px-6">
+        <div className="flex border-b border-orange-500/10 px-6">
           {[['info','Info'],['status','Employment'],['password','Password'],['features','Features']].map(([k,l])=>(
             <button key={k} onClick={()=>setTab(k)}
-              className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${tab===k?'text-[#4BBFBF] border-[#4BBFBF]':'text-slate-500 border-transparent hover:text-white'}`}>
+              className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${tab===k?'text-[#f97316] border-orange-500':'text-slate-500 border-transparent hover:text-white'}`}>
               {l}
             </button>
           ))}
@@ -300,7 +300,7 @@ export default function UsersPage() {
         <div className="flex flex-wrap gap-2">
           {['all','admin','hr','accountant','employee','sales'].map(r=>(
             <button key={r} onClick={()=>setRoleFilter(r)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all ${roleFilter===r?'text-[#4BBFBF]':'glass text-slate-400 hover:text-white'}`}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all ${roleFilter===r?'text-[#f97316]':'glass text-slate-400 hover:text-white'}`}
               style={roleFilter===r?{background:'rgba(75,191,191,0.15)',border:'1px solid rgba(75,191,191,0.25)'}:{}}>
               {r}
             </button>
@@ -357,7 +357,7 @@ export default function UsersPage() {
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full flex items-center justify-center text-[#0e1420] font-bold text-sm flex-shrink-0"
-                           style={{background:'linear-gradient(135deg,#4BBFBF,#38A8A8)'}}>
+                           style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>
                         {(u.first_name?.[0]||u.username?.[0]||'U').toUpperCase()}
                       </div>
                       <div>

@@ -6,7 +6,7 @@ import {
   HiArrowRight, HiOutlineGlobeAlt,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
+const TEAL = '#f97316'
 
 const features = [
   { icon: HiOutlineUsers,         title: 'Multi-Role Access',    desc: 'Admin, HR, Accountants, Employees, Sales — each with tailored dashboards and permissions.', color: TEAL },

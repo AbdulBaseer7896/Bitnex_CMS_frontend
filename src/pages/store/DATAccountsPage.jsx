@@ -7,7 +7,7 @@ import {
   HiOutlineDatabase,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
+const TEAL = '#f97316'
 
 const EMPTY = {
   name: '', proxy: '', dat_email: '', dat_password: '',
@@ -59,12 +59,12 @@ function DATAccountModal({ account, onClose, onSaved }) {
             <div>
               <label className="text-slate-400 text-xs mb-1 block font-medium">Account Name * <span className="text-slate-600">(e.g. "Aneeq Ref")</span></label>
               <input value={form.name} onChange={e => f('name', e.target.value)} disabled={isEdit}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50 disabled:opacity-50" />
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50 disabled:opacity-50" />
             </div>
             <div>
               <label className="text-slate-400 text-xs mb-1 block font-medium">Account Type</label>
               <select value={form.account_type} onChange={e => f('account_type', e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50">
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50">
                 <option value="dat_one" className="bg-[#0e1420]">DAT One</option>
                 <option value="dat_power" className="bg-[#0e1420]">DAT Power</option>
               </select>
@@ -74,23 +74,23 @@ function DATAccountModal({ account, onClose, onSaved }) {
             <label className="text-slate-400 text-xs mb-1 block font-medium">Proxy String * <span className="text-slate-600">(host:port:user:pass)</span></label>
             <input value={form.proxy} onChange={e => f('proxy', e.target.value)}
               placeholder="e.g. isp.decodo.com:10001:user-sp1545ixqj-ip-216.132.138.10:nQtP1Rn7qPs~gc45wc"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-[#4BBFBF]/50" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-orange-500/50" />
           </div>
 
           <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(75,191,191,0.05)', border: '1px solid rgba(75,191,191,0.12)' }}>
-            <h3 className="text-[#4BBFBF] text-xs font-semibold uppercase tracking-widest">DAT Login Credentials</h3>
+            <h3 className="text-[#f97316] text-xs font-semibold uppercase tracking-widest">DAT Login Credentials</h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-slate-400 text-xs mb-1 block font-medium">DAT Login Email</label>
                 <input type="email" value={form.dat_email} onChange={e => f('dat_email', e.target.value)}
                   placeholder="email used on dat.com"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
               </div>
               <div>
                 <label className="text-slate-400 text-xs mb-1 block font-medium">DAT Password</label>
                 <div className="relative">
                   <input type={showPass ? 'text' : 'password'} value={form.dat_password} onChange={e => f('dat_password', e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
                   <button type="button" onClick={() => setShowPass(!showPass)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
                     {showPass ? <HiOutlineEyeOff className="w-4 h-4" /> : <HiOutlineEye className="w-4 h-4" />}
@@ -100,12 +100,12 @@ function DATAccountModal({ account, onClose, onSaved }) {
               <div>
                 <label className="text-slate-400 text-xs mb-1 block font-medium">Card Last 4 Digits</label>
                 <input value={form.card_last_four} onChange={e => f('card_last_four', e.target.value)} maxLength={4}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
               </div>
               <div className="flex items-center">
                 <label className="flex items-center gap-2 cursor-pointer mt-4">
                   <div onClick={() => f('is_active', !form.is_active)}
-                    className={`w-10 h-5 rounded-full transition-colors relative ${form.is_active ? 'bg-[#4BBFBF]' : 'bg-white/10'}`}>
+                    className={`w-10 h-5 rounded-full transition-colors relative ${form.is_active ? 'bg-[#f97316]' : 'bg-white/10'}`}>
                     <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${form.is_active ? 'left-5' : 'left-0.5'}`} />
                   </div>
                   <span className="text-slate-300 text-sm">Active</span>
@@ -117,14 +117,14 @@ function DATAccountModal({ account, onClose, onSaved }) {
           <div>
             <label className="text-slate-400 text-xs mb-1 block font-medium">Notes</label>
             <textarea value={form.notes} onChange={e => f('notes', e.target.value)} rows={2}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
           </div>
         </div>
         <div className="flex gap-3 p-6 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white text-sm">Cancel</button>
           <button onClick={save} disabled={saving}
             className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Saving…' : (isEdit ? 'Update Account' : 'Add DAT Account')}
           </button>
         </div>
@@ -177,7 +177,7 @@ export default function DATAccountsPage({ user }) {
           {canManage && (
             <button onClick={() => setModal('new')}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-              style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+              style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
               <HiOutlinePlus className="w-4 h-4" /> Add DAT Account
             </button>
           )}
@@ -188,7 +188,7 @@ export default function DATAccountsPage({ user }) {
       <div className="grid grid-cols-3 gap-4">
         {[
           { label: 'Total Accounts', value: accounts.length, color: 'text-white' },
-          { label: 'Total Seats', value: totalSeats, color: 'text-[#4BBFBF]' },
+          { label: 'Total Seats', value: totalSeats, color: 'text-[#f97316]' },
           { label: 'Active Seats', value: activeSeats, color: 'text-emerald-400' },
         ].map(s => (
           <div key={s.label} className="glass-light rounded-2xl p-4" style={{ border: '1px solid rgba(75,191,191,0.1)' }}>
@@ -201,7 +201,7 @@ export default function DATAccountsPage({ user }) {
       <div className="relative">
         <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name, email, proxy…"
-          className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+          className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
       </div>
 
       {loading ? (
@@ -257,8 +257,8 @@ export default function DATAccountsPage({ user }) {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1 text-slate-400 text-xs">
-                      <HiOutlineUsers className="w-3 h-3 text-[#4BBFBF]" />
-                      <span className="text-[#4BBFBF] font-medium">{a.active_seat_count || 0}</span>
+                      <HiOutlineUsers className="w-3 h-3 text-[#f97316]" />
+                      <span className="text-[#f97316] font-medium">{a.active_seat_count || 0}</span>
                       <span>/ {a.seat_count || 0}</span>
                     </div>
                   </td>

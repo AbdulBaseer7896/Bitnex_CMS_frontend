@@ -9,8 +9,8 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts'
 
-const TEAL = '#4BBFBF'
-const COLORS = ['#4BBFBF','#7c3aed','#10b981','#f97316','#ec4899','#eab308','#06b6d4','#8b5cf6']
+const TEAL = '#f97316'
+const COLORS = ['#f97316','#7c3aed','#10b981','#f97316','#ec4899','#eab308','#06b6d4','#8b5cf6']
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 function StatCard({ icon: Icon, label, value, sub, color = TEAL }) {
@@ -125,7 +125,7 @@ export default function SalesDashboard({ user }) {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><div className="w-10 h-10 border-2 border-[#4BBFBF]/30 border-t-[#4BBFBF] rounded-full animate-spin" /></div>
+        <div className="flex justify-center py-12"><div className="w-10 h-10 border-2 border-orange-500/30 border-t-[#f97316] rounded-full animate-spin" /></div>
       ) : storeStats && (
         <>
           {/* KPIs */}
@@ -139,7 +139,7 @@ export default function SalesDashboard({ user }) {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="glass-light rounded-2xl p-5 flex flex-col gap-2" style={{ border: '1px solid rgba(75,191,191,0.15)' }}>
               <div className="text-slate-400 text-xs font-semibold uppercase tracking-widest">Total Monthly Revenue</div>
-              <div className="font-display text-3xl font-bold text-[#4BBFBF]">PKR {storeStats.totalRevenue.toLocaleString()}</div>
+              <div className="font-display text-3xl font-bold text-[#f97316]">PKR {storeStats.totalRevenue.toLocaleString()}</div>
               <div className="space-y-1 mt-1">
                 <div className="flex justify-between text-sm"><span className="text-slate-500">DAT One</span><span className="text-emerald-400">PKR {storeStats.monthlyRevenue.toLocaleString()}</span></div>
                 <div className="flex justify-between text-sm"><span className="text-slate-500">Dialers</span><span className="text-purple-400">PKR {storeStats.dialerRevenue.toLocaleString()}</span></div>

@@ -7,12 +7,14 @@ import {
   HiOutlineCamera, HiOutlinePlus, HiOutlinePencil, HiOutlineTrash,
   HiOutlineX, HiOutlineClock, HiOutlineCalendar, HiOutlineDatabase,
   HiOutlinePhone, HiOutlineEye, HiOutlineEyeOff, HiOutlineRefresh,
-  HiOutlineCheck, HiOutlineWifi,
+  HiOutlineCheck, HiOutlineWifi, HiOutlineCurrencyDollar,
 } from 'react-icons/hi'
 import BitnexLogo from '../../components/common/BitnexLogo'
+import SalarySetupTab from './SalarySetupTab'
+import LeaveAllowancesTab from './LeaveAllowancesTab'
 
-const TEAL = '#4BBFBF'
-const inp = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50"
+const TEAL = '#f97316'
+const inp = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50"
 const lbl = "text-slate-400 text-xs mb-1 block font-medium"
 
 // ── Profile Tab ───────────────────────────────────────────────────────────────
@@ -57,7 +59,7 @@ function ProfileTab() {
           {avatarUrl
             ? <img src={avatarUrl} alt="avatar" className="w-20 h-20 rounded-2xl object-cover shadow-lg"/>
             : <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-[#0e1420] font-bold text-2xl shadow-lg"
-                   style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+                   style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
                 {(user?.first_name?.[0]||user?.username?.[0]||'U').toUpperCase()}
               </div>
           }
@@ -90,7 +92,7 @@ function ProfileTab() {
           <input value={form.phone} onChange={e => setForm(p=>({...p,phone:e.target.value}))} className={inp}/></div>
         <button type="submit" disabled={saving}
           className="px-6 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-          style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+          style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
           {saving ? 'Saving…' : 'Save Changes'}
         </button>
       </form>
@@ -134,7 +136,7 @@ function DepartmentsTab() {
           placeholder="New department name…" className={`${inp} flex-1`}/>
         <button onClick={add} disabled={adding}
           className="px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm flex items-center gap-2"
-          style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+          style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
           <HiOutlinePlus className="w-4 h-4"/> Add
         </button>
       </div>
@@ -194,7 +196,7 @@ function GeneralTab() {
             placeholder="Mon,Tue,Wed,Thu,Fri" className={inp}/></div>
         <button onClick={save} disabled={saving}
           className="px-6 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-          style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+          style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
           {saving ? 'Saving…' : 'Save Settings'}
         </button>
       </div>
@@ -233,7 +235,7 @@ function DATAccountsTab() {
           </button>
           <button onClick={() => setModal('new')}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
             <HiOutlinePlus className="w-4 h-4"/> Add DAT Account
           </button>
         </div>
@@ -244,7 +246,7 @@ function DATAccountsTab() {
         {[
           { label:'Total Accounts', value: accounts.length },
           { label:'Active', value: accounts.filter(a=>a.is_active).length, color:'text-emerald-400' },
-          { label:'Total Seats Used', value: accounts.reduce((s,a)=>s+(a.seat_count||0),0), color:'text-[#4BBFBF]' },
+          { label:'Total Seats Used', value: accounts.reduce((s,a)=>s+(a.seat_count||0),0), color:'text-[#f97316]' },
         ].map(s => (
           <div key={s.label} className="rounded-xl p-3 text-center" style={{ background:'rgba(75,191,191,0.06)', border:'1px solid rgba(75,191,191,0.12)' }}>
             <div className={`text-2xl font-bold ${s.color||'text-white'}`}>{s.value}</div>
@@ -308,7 +310,7 @@ function DATAccountsTab() {
 
                 {/* Right side: seats + actions */}
                 <div className="text-right flex-shrink-0">
-                  <div className="text-[#4BBFBF] font-bold text-lg">{a.active_seat_count||0}</div>
+                  <div className="text-[#f97316] font-bold text-lg">{a.active_seat_count||0}</div>
                   <div className="text-slate-500 text-xs">/ {a.seat_count||0} seats</div>
                   <button onClick={() => setModal(a)} className="mt-3 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/5 text-slate-400 hover:text-white text-xs">
                     <HiOutlinePencil className="w-3 h-3"/> Edit
@@ -384,7 +386,7 @@ function DATAccountModal({ account, onClose, onSaved }) {
           </div>
 
           <div className="rounded-xl p-4 space-y-3" style={{ background:'rgba(75,191,191,0.05)', border:'1px solid rgba(75,191,191,0.12)' }}>
-            <div className="text-[#4BBFBF] text-xs font-semibold uppercase tracking-widest">DAT Login Credentials</div>
+            <div className="text-[#f97316] text-xs font-semibold uppercase tracking-widest">DAT Login Credentials</div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={lbl}>DAT Login Email</label>
@@ -406,7 +408,7 @@ function DATAccountModal({ account, onClose, onSaved }) {
               </div>
               <div className="flex items-center pt-5">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <div onClick={()=>f('is_active',!form.is_active)} className={`w-10 h-5 rounded-full relative transition-colors ${form.is_active?'bg-[#4BBFBF]':'bg-white/10'}`}>
+                  <div onClick={()=>f('is_active',!form.is_active)} className={`w-10 h-5 rounded-full relative transition-colors ${form.is_active?'bg-[#f97316]':'bg-white/10'}`}>
                     <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${form.is_active?'left-5':'left-0.5'}`}/>
                   </div>
                   <span className="text-slate-300 text-sm">Active</span>
@@ -422,7 +424,7 @@ function DATAccountModal({ account, onClose, onSaved }) {
         <div className="flex gap-3 p-5 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
           <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving?'Saving…':(isEdit?'Update':'Add Account')}
           </button>
         </div>
@@ -439,7 +441,7 @@ const DIALER_TYPES = [
 ]
 const DIALER_COLORS = {
   google_voice:'bg-blue-500/15 text-blue-400', ring_central:'bg-orange-500/15 text-orange-400',
-  nux_call:'bg-[#4BBFBF]/15 text-[#4BBFBF]', vonage:'bg-red-500/15 text-red-400',
+  nux_call:'bg-[#f97316]/15 text-[#f97316]', vonage:'bg-red-500/15 text-red-400',
   mighty_call:'bg-purple-500/15 text-purple-400', twilio:'bg-pink-500/15 text-pink-400',
   other:'bg-slate-500/15 text-slate-400',
 }
@@ -488,7 +490,7 @@ function DialerAccountsTab() {
           </button>
           <button onClick={()=>setModal('new')}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
             <HiOutlinePlus className="w-4 h-4"/> Add Dialer Seat
           </button>
         </div>
@@ -527,7 +529,7 @@ function DialerAccountsTab() {
               </div>
               {s.phone_number && (
                 <div className="text-slate-400 text-xs flex items-center gap-1 flex-shrink-0">
-                  <HiOutlinePhone className="w-3 h-3 text-[#4BBFBF]"/>
+                  <HiOutlinePhone className="w-3 h-3 text-[#f97316]"/>
                   {s.seat_number && <span className="text-slate-600">{s.seat_number}/</span>}
                   {s.phone_number}
                 </div>
@@ -634,7 +636,7 @@ function DialerModal({ sub, customers, products, onClose, onSaved }) {
             <div><label className={lbl}>Discount</label>
               <input type="number" value={form.discount} onChange={e=>f('discount',e.target.value)} onBlur={calcNet} className={inp}/></div>
             <div><label className={lbl}>Net Price</label>
-              <input type="number" value={form.net_price} onChange={e=>f('net_price',e.target.value)} className={`${inp} text-[#4BBFBF] font-medium`}/></div>
+              <input type="number" value={form.net_price} onChange={e=>f('net_price',e.target.value)} className={`${inp} text-[#f97316] font-medium`}/></div>
             <div><label className={lbl}>Currency</label>
               <select value={form.currency} onChange={e=>f('currency',e.target.value)} className={inp}>
                 {['PKR','USD','GBP','EUR','AED'].map(c=><option key={c} value={c} className="bg-[#0e1420]">{c}</option>)}
@@ -673,7 +675,7 @@ function DialerModal({ sub, customers, products, onClose, onSaved }) {
         <div className="flex gap-3 p-5 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
           <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving?'Saving…':(isEdit?'Update':'Add Dialer Seat')}
           </button>
         </div>
@@ -690,13 +692,16 @@ export default function SettingsPage() {
   const isAdmin = user?.role === 'admin'
   const isSalesHead = user?.role === 'admin' || (user?.role === 'sales' && user?.is_dept_head)
   const isSales = ['admin','sales'].includes(user?.role)
+  const isHR = ['admin','hr'].includes(user?.role)
 
   const TABS = [
-    { id:'profile',       icon:HiOutlineUser,          label:'Profile',         show: true },
-    { id:'departments',   icon:HiOutlineOfficeBuilding, label:'Departments',     show: isAdmin },
-    { id:'general',       icon:HiOutlineCog,            label:'General',         show: isAdmin },
-    { id:'dat-accounts',  icon:HiOutlineDatabase,       label:'DAT Accounts',    show: isSales },
-    { id:'dialer-accounts',icon:HiOutlinePhone,         label:'Dialer Accounts', show: isSales },
+    { id:'profile',          icon:HiOutlineUser,           label:'Profile',          show: true },
+    { id:'departments',      icon:HiOutlineOfficeBuilding, label:'Departments',      show: isAdmin },
+    { id:'general',          icon:HiOutlineCog,            label:'General',          show: isAdmin },
+    { id:'salary-setup',     icon:HiOutlineCurrencyDollar, label:'Salary Setup',     show: isHR },
+    { id:'leave-allowances', icon:HiOutlineCalendar,       label:'Leave Allowances', show: isHR },
+    { id:'dat-accounts',     icon:HiOutlineDatabase,       label:'DAT Accounts',     show: isSales },
+    { id:'dialer-accounts',  icon:HiOutlinePhone,          label:'Dialer Accounts',  show: isSales },
   ].filter(t => t.show)
 
   return (
@@ -707,7 +712,7 @@ export default function SettingsPage() {
           {TABS.map(t => (
             <button key={t.id} onClick={() => setActiveTab(t.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                activeTab === t.id ? 'text-[#4BBFBF]' : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
+                activeTab === t.id ? 'text-[#f97316]' : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
               }`}
               style={activeTab === t.id ? { background:'rgba(75,191,191,0.12)', border:'1px solid rgba(75,191,191,0.2)' } : {}}>
               <t.icon className="w-5 h-5 flex-shrink-0"/>
@@ -719,7 +724,7 @@ export default function SettingsPage() {
         {/* Quick info box */}
         <div className="mt-4 glass rounded-2xl p-4 text-center" style={{ border:'1px solid rgba(75,191,191,0.1)' }}>
           <div className="w-12 h-12 rounded-full flex items-center justify-center text-[#0e1420] font-bold mx-auto mb-2"
-               style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+               style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {(user?.first_name?.[0]||user?.username?.[0]||'U').toUpperCase()}
           </div>
           <div className="text-white text-sm font-medium truncate">{user?.first_name||user?.username}</div>
@@ -729,11 +734,13 @@ export default function SettingsPage() {
 
       {/* Content */}
       <div className="flex-1 card min-w-0">
-        {activeTab === 'profile'         && <ProfileTab/>}
-        {activeTab === 'departments'     && isAdmin && <DepartmentsTab/>}
-        {activeTab === 'general'         && isAdmin && <GeneralTab/>}
-        {activeTab === 'dat-accounts'    && isSales && <DATAccountsTab/>}
-        {activeTab === 'dialer-accounts' && isSales && <DialerAccountsTab/>}
+        {activeTab === 'profile'          && <ProfileTab/>}
+        {activeTab === 'departments'      && isAdmin && <DepartmentsTab/>}
+        {activeTab === 'general'          && isAdmin && <GeneralTab/>}
+        {activeTab === 'salary-setup'     && isHR    && <SalarySetupTab/>}
+        {activeTab === 'leave-allowances' && isHR    && <LeaveAllowancesTab/>}
+        {activeTab === 'dat-accounts'     && isSales && <DATAccountsTab/>}
+        {activeTab === 'dialer-accounts'  && isSales && <DialerAccountsTab/>}
       </div>
     </div>
   )

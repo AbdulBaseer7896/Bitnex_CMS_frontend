@@ -13,13 +13,13 @@ import {
   HiOutlineChartBar, HiOutlineTable, HiOutlineTrendingUp,
 } from 'react-icons/hi'
 
-const TEAL    = '#4BBFBF'
-const COLORS  = ['#4BBFBF','#ef4444','#eab308','#7c3aed','#f97316','#10b981']
+const TEAL    = '#f97316'
+const COLORS  = ['#f97316','#ef4444','#eab308','#7c3aed','#f97316','#10b981']
 const MONTHS  = ['January','February','March','April','May','June','July','August','September','October','November','December']
 const MONTHS_S= ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 const STATUS_CFG = {
-  present:  { color:'bg-[#4BBFBF]/15 text-[#4BBFBF] border-[#4BBFBF]/25',    label:'Present',  hasTime:true,  hex:'#4BBFBF' },
+  present:  { color:'bg-[#f97316]/15 text-[#f97316] border-orange-500/25',    label:'Present',  hasTime:true,  hex:'#f97316' },
   absent:   { color:'bg-red-500/15 text-red-400 border-red-500/25',            label:'Absent',   hasTime:false, hex:'#ef4444' },
   late:     { color:'bg-amber-500/15 text-amber-400 border-amber-500/25',      label:'Late',     hasTime:true,  hex:'#eab308' },
   half_day: { color:'bg-sky-500/15 text-sky-400 border-sky-500/25',            label:'Half Day', hasTime:true,  hex:'#38bdf8' },
@@ -321,14 +321,14 @@ function AnalyticsPanel({ records, employees, settings, month, year }) {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center text-[#0e1420] text-xs font-bold flex-shrink-0"
-                           style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+                           style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
                         {e.name[0].toUpperCase()}
                       </div>
                       <span className="text-white text-sm font-medium">{e.name}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3 text-slate-500 text-xs">{e.dept||'—'}</td>
-                  <td className="px-4 py-3 text-[#4BBFBF] font-semibold text-sm">{e.present}</td>
+                  <td className="px-4 py-3 text-[#f97316] font-semibold text-sm">{e.present}</td>
                   <td className="px-4 py-3 text-red-400 font-semibold text-sm">{e.absent||0}</td>
                   <td className="px-4 py-3 text-amber-400 font-semibold text-sm">{e.late||0}</td>
                   <td className="px-4 py-3 text-violet-400 font-semibold text-sm">{e.leave||0}</td>
@@ -338,7 +338,7 @@ function AnalyticsPanel({ records, employees, settings, month, year }) {
                       <div className="w-16 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
                         <div className="h-full rounded-full" style={{ width:`${regularPct}%`, background: regularPct>80?TEAL:regularPct>60?'#eab308':'#ef4444' }}/>
                       </div>
-                      <span className={`text-xs font-bold ${regularPct>80?'text-[#4BBFBF]':regularPct>60?'text-amber-400':'text-red-400'}`}>
+                      <span className={`text-xs font-bold ${regularPct>80?'text-[#f97316]':regularPct>60?'text-amber-400':'text-red-400'}`}>
                         {regularPct}%
                       </span>
                     </div>
@@ -482,10 +482,10 @@ function EntryModal({ employees, onClose, onSave, existing, companySettings }) {
               onDateChange={setOutDate} onHourChange={setOutHour} onMinChange={setOutMin}
               hint="For overnight shift = next calendar day"/>
             {liveHours && liveHours.hrs > 0 && (
-              <div className={`rounded-xl px-4 py-3 flex items-center justify-between text-sm ${isLate||isShort?'bg-amber-500/10 border border-amber-500/20':'bg-[#4BBFBF]/10 border border-[#4BBFBF]/20'}`}>
+              <div className={`rounded-xl px-4 py-3 flex items-center justify-between text-sm ${isLate||isShort?'bg-amber-500/10 border border-amber-500/20':'bg-[#f97316]/10 border border-orange-500/20'}`}>
                 <span className="text-slate-400">Working hours</span>
                 <div className="flex items-center gap-2">
-                  <span className={`font-bold text-lg ${isShort?'text-amber-400':'text-[#4BBFBF]'}`}>{liveHours.hrs.toFixed(1)}h</span>
+                  <span className={`font-bold text-lg ${isShort?'text-amber-400':'text-[#f97316]'}`}>{liveHours.hrs.toFixed(1)}h</span>
                   {isLate  && <span className="text-xs text-amber-400 bg-amber-500/15 px-2 py-0.5 rounded-full">⚠ Late {liveHours.mLate}m</span>}
                   {isShort && <span className="text-xs text-red-400 bg-red-500/15 px-2 py-0.5 rounded-full">⚠ Short {(liveHours.req-liveHours.hrs).toFixed(1)}h</span>}
                 </div>
@@ -670,7 +670,7 @@ export default function AttendancePage() {
           { k:'corrections', icon:HiOutlineExclamation, label:`Corrections${pendingCount?` (${pendingCount})`:''}`},
         ].map(t=>(
           <button key={t.k} onClick={()=>setViewMode(t.k)}
-            className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-colors ${viewMode===t.k?'text-[#4BBFBF] border-[#4BBFBF]':'text-slate-500 border-transparent hover:text-white'}`}>
+            className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-colors ${viewMode===t.k?'text-[#f97316] border-orange-500':'text-slate-500 border-transparent hover:text-white'}`}>
             <t.icon className="w-4 h-4"/>{t.label}
           </button>
         ))}
@@ -757,7 +757,7 @@ export default function AttendancePage() {
                   </td>
                   <td className="px-5 py-4 text-slate-400 text-sm max-w-xs">{c.reason}</td>
                   <td className="px-5 py-4">
-                    <span className={`badge text-xs ${c.status==='pending'?'bg-amber-500/15 text-amber-400':c.status==='approved'?'bg-[#4BBFBF]/15 text-[#4BBFBF]':'bg-red-500/15 text-red-400'}`}>{c.status}</span>
+                    <span className={`badge text-xs ${c.status==='pending'?'bg-amber-500/15 text-amber-400':c.status==='approved'?'bg-[#f97316]/15 text-[#f97316]':'bg-red-500/15 text-red-400'}`}>{c.status}</span>
                   </td>
                   <td className="px-5 py-4">
                     {canEdit&&c.status==='pending'&&(

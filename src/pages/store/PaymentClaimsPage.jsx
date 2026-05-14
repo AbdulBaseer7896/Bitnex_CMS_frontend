@@ -8,8 +8,8 @@ import {
   HiOutlineChevronRight, HiOutlineDatabase, HiOutlinePhone,
 } from 'react-icons/hi'
 
-const TEAL = '#4BBFBF'
-const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50'
+const TEAL = '#f97316'
+const inp = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50'
 const STATUS_COLORS = {
   pending: 'bg-yellow-500/15 text-yellow-400',
   approved: 'bg-emerald-500/15 text-emerald-400',
@@ -76,9 +76,9 @@ function SubmitDATClaimModal({ seats, customers, isCustomer, onClose, onSaved })
                   <label key={s.id} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-white/5">
                     <input type="checkbox" checked={form.user_links.includes(s.id)}
                       onChange={() => f('user_links', form.user_links.includes(s.id) ? form.user_links.filter(x=>x!==s.id) : [...form.user_links, s.id])}
-                      className="w-4 h-4 rounded accent-[#4BBFBF]" />
+                      className="w-4 h-4 rounded accent-[#f97316]" />
                     <span className="text-slate-300 text-sm flex-1">{s.mongo_user_name}</span>
-                    <span className="text-[#4BBFBF] text-sm">{s.currency} {parseFloat(s.monthly_price||0).toLocaleString()}/mo</span>
+                    <span className="text-[#f97316] text-sm">{s.currency} {parseFloat(s.monthly_price||0).toLocaleString()}/mo</span>
                   </label>
                 ))}
               </div>
@@ -115,12 +115,12 @@ function SubmitDATClaimModal({ seats, customers, isCustomer, onClose, onSaved })
           <div>
             <label className="text-slate-400 text-xs mb-2 block font-medium">Screenshot</label>
             {screenshot ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#4BBFBF]/10 border border-[#4BBFBF]/20">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#f97316]/10 border border-orange-500/20">
                 <span className="text-slate-300 text-sm flex-1 truncate">{screenshot.name}</span>
                 <button onClick={() => setScreenshot(null)} className="text-slate-500 hover:text-red-400"><HiOutlineX className="w-4 h-4" /></button>
               </div>
             ) : (
-              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-[#4BBFBF]/40 text-sm">
+              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-orange-500/40 text-sm">
                 <HiOutlinePhotograph className="w-5 h-5" /> Upload screenshot
                 <input type="file" accept="image/*" className="hidden" onChange={e => setScreenshot(e.target.files[0])} />
               </label>
@@ -129,7 +129,7 @@ function SubmitDATClaimModal({ seats, customers, isCustomer, onClose, onSaved })
         </div>
         <div className="flex gap-3 p-5 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
-          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Submitting…' : 'Submit'}
           </button>
         </div>
@@ -199,7 +199,7 @@ function SubmitDialerClaimModal({ dialerSubs, customers, isCustomer, onClose, on
                   <label key={s.id} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-white/5">
                     <input type="checkbox" checked={form.dialer_subscriptions.includes(s.id)}
                       onChange={() => f('dialer_subscriptions', form.dialer_subscriptions.includes(s.id) ? form.dialer_subscriptions.filter(x=>x!==s.id) : [...form.dialer_subscriptions, s.id])}
-                      className="w-4 h-4 rounded accent-[#4BBFBF]" />
+                      className="w-4 h-4 rounded accent-[#f97316]" />
                     <span className="text-slate-300 text-sm flex-1">{s.domain_email}</span>
                     <span className={'text-xs px-1.5 py-0.5 rounded ' + (s.expiry_status === 'expired' ? 'bg-red-500/15 text-red-400' : 'bg-slate-500/15 text-slate-400')}>{s.expiry_status?.replace(/_/g,' ')}</span>
                     <span className="text-emerald-400 text-sm">{s.currency} {parseFloat(s.net_price||0).toLocaleString()}/mo</span>
@@ -207,7 +207,7 @@ function SubmitDialerClaimModal({ dialerSubs, customers, isCustomer, onClose, on
                 ))}
               </div>
               {totalSelected > 0 && (
-                <div className="text-right text-[#4BBFBF] text-sm mt-1">Total: {form.currency} {totalSelected.toLocaleString()}</div>
+                <div className="text-right text-[#f97316] text-sm mt-1">Total: {form.currency} {totalSelected.toLocaleString()}</div>
               )}
             </div>
           )}
@@ -243,12 +243,12 @@ function SubmitDialerClaimModal({ dialerSubs, customers, isCustomer, onClose, on
           <div>
             <label className="text-slate-400 text-xs mb-2 block font-medium">Screenshot</label>
             {screenshot ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#4BBFBF]/10 border border-[#4BBFBF]/20">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#f97316]/10 border border-orange-500/20">
                 <span className="text-slate-300 text-sm flex-1 truncate">{screenshot.name}</span>
                 <button onClick={() => setScreenshot(null)} className="text-slate-500 hover:text-red-400"><HiOutlineX className="w-4 h-4" /></button>
               </div>
             ) : (
-              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-[#4BBFBF]/40 text-sm">
+              <label className="cursor-pointer w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:border-orange-500/40 text-sm">
                 <HiOutlinePhotograph className="w-5 h-5" /> Upload screenshot
                 <input type="file" accept="image/*" className="hidden" onChange={e => setScreenshot(e.target.files[0])} />
               </label>
@@ -257,7 +257,7 @@ function SubmitDialerClaimModal({ dialerSubs, customers, isCustomer, onClose, on
         </div>
         <div className="flex gap-3 p-5 pt-0">
           <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
-          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+          <button onClick={save} disabled={saving} className="flex-1 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Submitting…' : 'Submit'}
           </button>
         </div>
@@ -316,7 +316,7 @@ function ApproveModal({ claim, type, onClose, onSaved }) {
             <div className="flex justify-between text-sm"><span className="text-slate-400">Date</span><span className="text-slate-300">{claim.payment_date}</span></div>
             <div className="flex justify-between text-sm"><span className="text-slate-400">Method</span><span className="text-slate-300 capitalize">{claim.payment_method?.replace(/_/g,' ')}</span></div>
             {claim.transaction_ref && <div className="flex justify-between text-sm"><span className="text-slate-400">TXN Ref</span><span className="text-slate-300 font-mono">{claim.transaction_ref}</span></div>}
-            {claim.payment_screenshot && <a href={claim.payment_screenshot} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#4BBFBF] text-sm hover:underline"><HiOutlinePhotograph className="w-4 h-4" /> View Screenshot</a>}
+            {claim.payment_screenshot && <a href={claim.payment_screenshot} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#f97316] text-sm hover:underline"><HiOutlinePhotograph className="w-4 h-4" /> View Screenshot</a>}
           </div>
           <div>
             <label className="text-slate-400 text-xs mb-1 block">Approved Amount</label>
@@ -350,7 +350,7 @@ function ApproveModal({ claim, type, onClose, onSaved }) {
           </button>
           <div className="flex-1" />
           <button onClick={onClose} className="px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm">Cancel</button>
-          <button onClick={approve} disabled={saving} className="px-6 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+          <button onClick={approve} disabled={saving} className="px-6 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm" style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             {saving ? 'Approving…' : 'Approve'}
           </button>
         </div>
@@ -384,17 +384,17 @@ function ClaimsList({ claims, type, canApprove, onApprove, loading }) {
         <div className="relative">
           <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search claim ID, customer, TXN ref…"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#4BBFBF]/50" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50" />
         </div>
         <div className="flex gap-2 flex-wrap">
           <input type="number" value={minAmount} onChange={e => setMinAmount(e.target.value)} placeholder="Min amount"
-            className="flex-1 min-w-24 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-[#4BBFBF]/50" />
+            className="flex-1 min-w-24 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500/50" />
           <input type="number" value={maxAmount} onChange={e => setMaxAmount(e.target.value)} placeholder="Max amount"
-            className="flex-1 min-w-24 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-[#4BBFBF]/50" />
+            className="flex-1 min-w-24 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500/50" />
           <input type="date" value={fromDate} onChange={e => setFromDate(e.target.value)}
-            className="flex-1 min-w-32 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-[#4BBFBF]/50" />
+            className="flex-1 min-w-32 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500/50" />
           <input type="date" value={toDate} onChange={e => setToDate(e.target.value)}
-            className="flex-1 min-w-32 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-[#4BBFBF]/50" />
+            className="flex-1 min-w-32 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-orange-500/50" />
           {(search||minAmount||maxAmount||fromDate||toDate) && (
             <button onClick={()=>{setSearch('');setMinAmount('');setMaxAmount('');setFromDate('');setToDate('')}}
               className="px-3 py-2 rounded-xl text-xs text-slate-400 border border-white/10 hover:text-white">Clear</button>
@@ -416,16 +416,16 @@ function ClaimsList({ claims, type, canApprove, onApprove, loading }) {
                 <span className={'px-2 py-0.5 rounded-full text-xs ' + (STATUS_COLORS[c.status] || '')}>{c.status}</span>
               </div>
               <div className="grid grid-cols-3 gap-3 text-sm">
-                <div><div className="text-slate-500 text-xs">Claimed</div><div className="text-[#4BBFBF] font-bold">{c.currency} {parseFloat(c.claimed_amount).toLocaleString()}</div></div>
+                <div><div className="text-slate-500 text-xs">Claimed</div><div className="text-[#f97316] font-bold">{c.currency} {parseFloat(c.claimed_amount).toLocaleString()}</div></div>
                 {c.approved_amount && <div><div className="text-slate-500 text-xs">Approved</div><div className="text-emerald-400 font-bold">{c.currency} {parseFloat(c.approved_amount).toLocaleString()}</div></div>}
                 <div><div className="text-slate-500 text-xs">Date</div><div className="text-slate-300">{c.payment_date}</div></div>
               </div>
               {c.transaction_ref && <div className="text-slate-500 text-xs mt-1">Ref: <span className="font-mono text-slate-400">{c.transaction_ref}</span></div>}
             </div>
             <div className="flex flex-col gap-2 flex-shrink-0">
-              {c.payment_screenshot && <a href={c.payment_screenshot} target="_blank" rel="noreferrer" className="text-[#4BBFBF] text-xs hover:underline flex items-center gap-1"><HiOutlinePhotograph className="w-3.5 h-3.5" /> Screenshot</a>}
+              {c.payment_screenshot && <a href={c.payment_screenshot} target="_blank" rel="noreferrer" className="text-[#f97316] text-xs hover:underline flex items-center gap-1"><HiOutlinePhotograph className="w-3.5 h-3.5" /> Screenshot</a>}
               {canApprove && c.status === 'pending' && (
-                <button onClick={() => onApprove(c)} className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(75,191,191,0.15)', color: '#4BBFBF', border: '1px solid rgba(75,191,191,0.2)' }}>
+                <button onClick={() => onApprove(c)} className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'rgba(75,191,191,0.15)', color: '#f97316', border: '1px solid rgba(75,191,191,0.2)' }}>
                   <HiOutlinePencil className="w-3 h-3" /> Review
                 </button>
               )}
@@ -528,7 +528,7 @@ export default function PaymentClaimsPage({ user }) {
           <button onClick={load} className="p-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white"><HiOutlineRefresh className="w-5 h-5" /></button>
           <button onClick={() => setSubmitDATModal(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[#0e1420] font-semibold text-sm"
-            style={{ background: 'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+            style={{ background: 'linear-gradient(135deg,#f97316,#ea580c)' }}>
             <HiOutlineDatabase className="w-4 h-4" /> DAT Payment
           </button>
           <button onClick={() => setSubmitDialerModal(true)}
@@ -542,7 +542,7 @@ export default function PaymentClaimsPage({ user }) {
       {/* Type tabs */}
       <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }}>
         <button onClick={() => setActiveType('dat')}
-          className={'flex-1 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ' + (activeType === 'dat' ? 'text-[#4BBFBF]' : 'text-slate-400 hover:text-white')}
+          className={'flex-1 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ' + (activeType === 'dat' ? 'text-[#f97316]' : 'text-slate-400 hover:text-white')}
           style={activeType === 'dat' ? { background: 'rgba(75,191,191,0.12)', border: '1px solid rgba(75,191,191,0.2)' } : {}}>
           <HiOutlineDatabase className="w-4 h-4" /> DAT One
           {pendingDat > 0 && <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-yellow-500/20 text-yellow-400">{pendingDat}</span>}
@@ -562,13 +562,13 @@ export default function PaymentClaimsPage({ user }) {
             <div className="glass-light rounded-2xl p-3" style={{ border: '1px solid rgba(75,191,191,0.1)' }}>
               <div className="text-slate-500 text-xs font-semibold uppercase tracking-widest px-2 py-2">Filter by Customer</div>
               <button onClick={() => setSelectedCustomer(null)}
-                className={'w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm mb-1 ' + (!selectedCustomer ? 'text-[#4BBFBF] bg-[#4BBFBF]/10' : 'text-slate-400 hover:text-white hover:bg-white/5')}>
+                className={'w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm mb-1 ' + (!selectedCustomer ? 'text-[#f97316] bg-[#f97316]/10' : 'text-slate-400 hover:text-white hover:bg-white/5')}>
                 All Customers
               </button>
               <div className="space-y-0.5 max-h-72 overflow-y-auto">
                 {customerList.map(c => (
                   <button key={c.id} onClick={() => setSelectedCustomer(c.id === selectedCustomer ? null : c.id)}
-                    className={'w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm ' + (selectedCustomer === c.id ? 'text-[#4BBFBF] bg-[#4BBFBF]/10' : 'text-slate-400 hover:text-white hover:bg-white/5')}>
+                    className={'w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm ' + (selectedCustomer === c.id ? 'text-[#f97316] bg-[#f97316]/10' : 'text-slate-400 hover:text-white hover:bg-white/5')}>
                     <span className="truncate">{c.name}</span>
                     <HiOutlineChevronRight className="w-3 h-3 flex-shrink-0" />
                   </button>

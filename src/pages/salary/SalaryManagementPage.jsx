@@ -9,13 +9,13 @@ import {
 } from 'react-icons/hi'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 
-const TEAL   = '#4BBFBF'
+const TEAL   = '#f97316'
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
 const MONTHS_S = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 const EMP_STATUS_COLOR = {
   probation:     'bg-amber-500/15 text-amber-400',
-  permanent:     'bg-[#4BBFBF]/15 text-[#4BBFBF]',
+  permanent:     'bg-[#f97316]/15 text-[#f97316]',
   contract:      'bg-sky-500/15 text-sky-400',
   notice_period: 'bg-red-500/15 text-red-400',
 }
@@ -29,7 +29,7 @@ function generateSlipHTML(slip, employee, structure, company) {
   const month   = MONTHS[(slip.month||1)-1]
   const logo    = company?.logo_url
     ? `<img src="${company.logo_url}" style="height:48px;object-fit:contain;" alt="logo"/>`
-    : `<div style="font-size:26px;font-weight:900;color:#4BBFBF;letter-spacing:-1px;">BITNEX</div>`
+    : `<div style="font-size:26px;font-weight:900;color:#f97316;letter-spacing:-1px;">BITNEX</div>`
 
   const row = (l,v,cls='')=>`<tr><td style="padding:8px 0;color:#64748b;font-size:13px">${l}</td><td style="padding:8px 0;text-align:right;font-weight:600;font-size:13px;color:${cls||'#1e293b'}">${v}</td></tr>`
 
@@ -40,7 +40,7 @@ function generateSlipHTML(slip, employee, structure, company) {
   body{font-family:'Plus Jakarta Sans',Arial,sans-serif;background:#f8fafc;padding:24px;color:#1e293b}
   .slip{max-width:720px;margin:0 auto;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 8px 60px rgba(0,0,0,0.15)}
   .hdr{background:linear-gradient(135deg,#0e1420 0%,#1e293b 60%,#0e1420 100%);padding:28px 36px;display:flex;align-items:flex-start;justify-content:space-between}
-  .co-name{font-size:22px;font-weight:800;color:#4BBFBF;margin:6px 0 2px}
+  .co-name{font-size:22px;font-weight:800;color:#f97316;margin:6px 0 2px}
   .co-sub{font-size:11px;color:#94a3b8;line-height:1.6}
   .slip-badge{text-align:right}
   .slip-badge h2{color:#fff;font-size:20px;font-weight:700;letter-spacing:2px}
@@ -61,8 +61,8 @@ function generateSlipHTML(slip, employee, structure, company) {
   .net-box{background:linear-gradient(135deg,rgba(75,191,191,0.08),rgba(75,191,191,0.04));border:2px solid rgba(75,191,191,0.25);border-radius:14px;padding:22px 28px;margin:20px 0;display:flex;justify-content:space-between;align-items:center}
   .net-label{font-size:15px;font-weight:700;color:#1e293b}
   .net-sub{font-size:12px;color:#94a3b8;margin-top:3px}
-  .net-amount{font-size:34px;font-weight:800;color:#4BBFBF;letter-spacing:-1px}
-  .net-currency{font-size:14px;color:#4BBFBF;margin-bottom:4px}
+  .net-amount{font-size:34px;font-weight:800;color:#f97316;letter-spacing:-1px}
+  .net-currency{font-size:14px;color:#f97316;margin-bottom:4px}
   .footer{padding:18px 36px;background:#f8fafc;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:flex-end}
   .footer-note{font-size:10px;color:#94a3b8;line-height:1.7}
   .sig{text-align:center;width:160px}
@@ -75,7 +75,7 @@ function generateSlipHTML(slip, employee, structure, company) {
     <div class="slip-badge">
       <h2>SALARY SLIP</h2>
       <p>${month} ${slip.year}</p>
-      <span class="paid-tag" style="background:${slip.status==='paid'?'rgba(75,191,191,0.15)':'rgba(234,179,8,0.15)'};color:${slip.status==='paid'?'#4BBFBF':'#eab308'}">
+      <span class="paid-tag" style="background:${slip.status==='paid'?'rgba(75,191,191,0.15)':'rgba(234,179,8,0.15)'};color:${slip.status==='paid'?'#f97316':'#eab308'}">
         ${slip.status==='paid'?'✓  PAID':'⏳  PENDING'}
       </span>
     </div>
@@ -101,7 +101,7 @@ function generateSlipHTML(slip, employee, structure, company) {
         ${Number(structure?.other_allowances||0)>0?row('Other Allowances',`PKR ${Number(structure?.other_allowances).toLocaleString()}`):'' }
         ${bonus>0?row('Performance Bonus',`PKR ${bonus.toLocaleString()}`):''}
       </table>
-      <div class="subtotal"><span>Gross Salary</span><span style="color:#4BBFBF">PKR ${gross.toLocaleString()}</span></div>
+      <div class="subtotal"><span>Gross Salary</span><span style="color:#f97316">PKR ${gross.toLocaleString()}</span></div>
     </div>
 
     <div class="section">
@@ -120,7 +120,7 @@ function generateSlipHTML(slip, employee, structure, company) {
       <div style="text-align:right"><div class="net-currency">PKR</div><div class="net-amount">${net.toLocaleString()}</div></div>
     </div>
 
-    ${slip.notes?`<div style="background:#f8fafc;padding:14px;border-radius:10px;border-left:3px solid #4BBFBF;margin-top:4px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:#94a3b8;margin-bottom:4px">Note</div><div style="font-size:13px;color:#475569">${slip.notes}</div></div>`:''}
+    ${slip.notes?`<div style="background:#f8fafc;padding:14px;border-radius:10px;border-left:3px solid #f97316;margin-top:4px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:#94a3b8;margin-bottom:4px">Note</div><div style="font-size:13px;color:#475569">${slip.notes}</div></div>`:''}
   </div>
 
   <div class="footer">
@@ -385,7 +385,7 @@ function EmployeeDetail({ employee, company, onClose }) {
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-[#0e1420] font-bold text-2xl shadow-lg flex-shrink-0"
-                 style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+                 style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
               {(employee.first_name?.[0]||employee.username?.[0]||'E').toUpperCase()}
             </div>
             <div>
@@ -501,7 +501,7 @@ function EmployeeDetail({ employee, company, onClose }) {
               <div className="grid grid-cols-3 gap-3 mt-4">
                 {[
                   { label:'Slips', val:slips.length },
-                  { label:'Paid',  val:slips.filter(s=>s.status==='paid').length, color:'text-[#4BBFBF]' },
+                  { label:'Paid',  val:slips.filter(s=>s.status==='paid').length, color:'text-[#f97316]' },
                   { label:'Pending',val:slips.filter(s=>s.status!=='paid').length, color:'text-amber-400' },
                 ].map(s=>(
                   <div key={s.label} className="glass rounded-xl p-3 text-center">
@@ -549,7 +549,7 @@ function EmployeeDetail({ employee, company, onClose }) {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <span className={`badge text-xs ${s.status==='paid'?'bg-[#4BBFBF]/15 text-[#4BBFBF] border border-[#4BBFBF]/20':'bg-amber-500/15 text-amber-400 border border-amber-500/20'}`}>
+                    <span className={`badge text-xs ${s.status==='paid'?'bg-[#f97316]/15 text-[#f97316] border border-orange-500/20':'bg-amber-500/15 text-amber-400 border border-amber-500/20'}`}>
                       {s.status==='paid'?'✓ Paid':'⏳ Pending'}
                     </span>
                     {s.paid_date&&<div className="text-slate-600 text-[10px] mt-1">{s.paid_date}</div>}
@@ -614,7 +614,7 @@ export default function SalaryManagementPage() {
   return (
     <div className="flex gap-0 h-full" style={{ minHeight:'calc(100vh - 120px)' }}>
       {/* ── LEFT SIDEBAR ── */}
-      <div className="w-72 flex-shrink-0 flex flex-col border-r border-[#4BBFBF]/10 pr-4">
+      <div className="w-72 flex-shrink-0 flex flex-col border-r border-orange-500/10 pr-4">
         {/* Search + filter */}
         <div className="mb-3 space-y-2">
           <div className="relative">
@@ -625,7 +625,7 @@ export default function SalaryManagementPage() {
           <div className="flex gap-1.5 flex-wrap">
             {['all','employee','hr','sales'].map(r=>(
               <button key={r} onClick={()=>setRoleFilter(r)}
-                className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold capitalize transition-all ${roleFilter===r?'text-[#4BBFBF]':'glass text-slate-500 hover:text-white'}`}
+                className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold capitalize transition-all ${roleFilter===r?'text-[#f97316]':'glass text-slate-500 hover:text-white'}`}
                 style={roleFilter===r?{background:'rgba(75,191,191,0.15)',border:'1px solid rgba(75,191,191,0.25)'}:{}}>
                 {r}
               </button>
@@ -645,7 +645,7 @@ export default function SalaryManagementPage() {
               style={selected?.id===emp.id?{background:'rgba(75,191,191,0.12)',border:'1px solid rgba(75,191,191,0.2)'}:{border:'1px solid transparent'}}>
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full flex items-center justify-center text-[#0e1420] font-bold text-sm flex-shrink-0"
-                     style={{ background:'linear-gradient(135deg,#4BBFBF,#38A8A8)' }}>
+                     style={{ background:'linear-gradient(135deg,#f97316,#ea580c)' }}>
                   {(emp.first_name?.[0]||emp.username?.[0]||'E').toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -666,14 +666,14 @@ export default function SalaryManagementPage() {
         </div>
 
         {/* Sidebar footer stats */}
-        <div className="mt-3 pt-3 border-t border-[#4BBFBF]/10">
+        <div className="mt-3 pt-3 border-t border-orange-500/10">
           <div className="grid grid-cols-2 gap-2">
             <div className="glass rounded-xl p-2.5 text-center">
               <div className="font-display font-bold text-white text-lg">{employees.length}</div>
               <div className="text-slate-600 text-[10px]">Total</div>
             </div>
             <div className="glass rounded-xl p-2.5 text-center">
-              <div className="font-display font-bold text-[#4BBFBF] text-lg">
+              <div className="font-display font-bold text-[#f97316] text-lg">
                 {employees.filter(e=>e.employment_status==='permanent').length}
               </div>
               <div className="text-slate-600 text-[10px]">Permanent</div>

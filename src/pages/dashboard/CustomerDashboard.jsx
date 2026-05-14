@@ -11,7 +11,7 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts'
 
-const TEAL = '#4BBFBF'
+const TEAL = '#f97316'
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 function KPICard({ icon: Icon, label, value, sub, color = TEAL, onClick, alert }) {
@@ -21,7 +21,7 @@ function KPICard({ icon: Icon, label, value, sub, color = TEAL, onClick, alert }
       className={'stat-card relative ' + (onClick ? 'cursor-pointer hover:scale-[1.02] transition-transform' : '')}
       style={alert ? { border: '1px solid rgba(239,68,68,0.3)' } : {}}>
       {onClick && (
-        <div className="absolute top-3 right-3 text-[#4BBFBF] opacity-60">
+        <div className="absolute top-3 right-3 text-[#f97316] opacity-60">
           <HiOutlineArrowRight className="w-4 h-4" />
         </div>
       )}
@@ -86,7 +86,7 @@ export default function CustomerDashboard({ user }) {
 
   // Seat status pie chart
   const seatStatusData = [
-    { name: 'Active', value: activeSeats.length, color: '#4BBFBF' },
+    { name: 'Active', value: activeSeats.length, color: '#f97316' },
     { name: 'Expiring', value: expiringSoon.length, color: '#f97316' },
     { name: 'Expired', value: expiredSeats.length, color: '#ef4444' },
     { name: 'Blocked', value: seats.filter(s => !s.is_active).length, color: '#64748b' },
@@ -107,7 +107,7 @@ export default function CustomerDashboard({ user }) {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-10 h-10 border-2 border-[#4BBFBF]/30 border-t-[#4BBFBF] rounded-full animate-spin" />
+          <div className="w-10 h-10 border-2 border-orange-500/30 border-t-[#f97316] rounded-full animate-spin" />
         </div>
       ) : (
         <>
@@ -213,7 +213,7 @@ export default function CustomerDashboard({ user }) {
                           </div>
                           <div className="mt-2 p-2.5 rounded-lg text-xs flex items-start gap-2"
                             style={{ background: 'rgba(75,191,191,0.06)', border: '1px solid rgba(75,191,191,0.12)' }}>
-                            <HiOutlineInformationCircle className="w-3.5 h-3.5 text-[#4BBFBF] flex-shrink-0 mt-0.5" />
+                            <HiOutlineInformationCircle className="w-3.5 h-3.5 text-[#f97316] flex-shrink-0 mt-0.5" />
                             <span className="text-slate-400">
                               This user seat is no longer active. Please contact your account manager to get a replacement seat or adjust your subscription.
                             </span>
@@ -278,7 +278,7 @@ export default function CustomerDashboard({ user }) {
                   <div className="border-t border-white/10 mt-3 pt-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-400">Total Paid (all time)</span>
-                      <span className="text-[#4BBFBF] font-bold">PKR {totalPaid.toLocaleString()}</span>
+                      <span className="text-[#f97316] font-bold">PKR {totalPaid.toLocaleString()}</span>
                     </div>
                   </div>
                 </>
@@ -293,7 +293,7 @@ export default function CustomerDashboard({ user }) {
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-display font-bold text-white text-lg">My DAT Seats</h3>
               <button onClick={() => navigate('/store/dat')}
-                className="flex items-center gap-1 text-[#4BBFBF] text-sm hover:underline">
+                className="flex items-center gap-1 text-[#f97316] text-sm hover:underline">
                 View all <HiOutlineArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -324,7 +324,7 @@ export default function CustomerDashboard({ user }) {
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-display font-bold text-white text-lg">Recent Payments</h3>
               <button onClick={() => navigate('/store/payments')}
-                className="flex items-center gap-1 text-[#4BBFBF] text-sm hover:underline">
+                className="flex items-center gap-1 text-[#f97316] text-sm hover:underline">
                 View all <HiOutlineArrowRight className="w-4 h-4" />
               </button>
             </div>
