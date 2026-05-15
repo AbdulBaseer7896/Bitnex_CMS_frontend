@@ -1,94 +1,21 @@
-import { useState, useRef, useEffect, useCallback, createContext, useContext } from 'react'
+import { useState, useRef, useEffect, useCallback, createContext, useContext, useMemo } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../api/client'
 import BitnexLogo from '../common/BitnexLogo'
 import {
-  HiOutlineHome, HiOutlineUsers, HiOutlineClipboardList,
-  HiOutlineCurrencyDollar, HiOutlineLogout,
-  HiOutlineDocumentReport, HiOutlineMenuAlt2, HiX,
-  HiOutlineShieldCheck, HiOutlineCollection,
-  HiOutlineClock, HiOutlineCog, HiOutlineChevronDown,
-  HiOutlineDatabase, HiOutlineCreditCard, HiOutlinePhone,
-  HiOutlineCash, HiOutlineChartPie, HiOutlineExclamationCircle,
-  HiOutlineDocumentText, HiOutlineReceiptRefund,
+  HiOutlineLogout, HiOutlineMenuAlt2, HiX,
+  HiOutlineShieldCheck, HiOutlineCog, HiOutlineChevronDown,
 } from 'react-icons/hi'
-import { RiTeamLine } from 'react-icons/ri'
+import { buildNavForUser } from '../../utils/modules'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Sidebar nav — combined updates:
-//   • Documents tab for admin + hr.
-//   • Accountant trimmed: only Dashboard, Expenses, Reports.
-//   • NEW: Reimbursements module for every role.
-//       admin/accountant → "Reimbursements" (review queue + own)
-//       hr               → "Additional Payments" (HR salary-inclusion queue)
-//       everyone else    → "My Reimbursements" (personal claims)
+// Sidebar — driven by the user's `modules` array (effective module slugs from
+// the server). The visual layout (icons, labels, grouping) comes from
+// utils/modules.js. We no longer hardcode a nav config per role here, so adding
+// or revoking a module for any user updates the sidebar on next login/refresh
+// without any code change.
 // ─────────────────────────────────────────────────────────────────────────────
-const navConfig = {
-  admin: [
-    { to:'/dashboard',          icon:HiOutlineHome,           label:'Dashboard' },
-    { to:'/admin/users',        icon:HiOutlineUsers,          label:'Users' },
-    { to:'/hr/employees',       icon:RiTeamLine,              label:'Employees' },
-    { to:'/hr/leaves',          icon:HiOutlineClipboardList,  label:'Leaves' },
-    { to:'/attendance',         icon:HiOutlineClock,          label:'Attendance' },
-    { to:'/salary/manage',      icon:HiOutlineCurrencyDollar, label:'Manage Salary' },
-    { to:'/documents',          icon:HiOutlineDocumentText,   label:'Documents' },
-    { to:'/reimbursements',     icon:HiOutlineReceiptRefund,  label:'Reimbursements' },
-    { to:'/accounts/expenses',  icon:HiOutlineDocumentReport, label:'Expenses' },
-    { divider:'DAT One Store' },
-    { to:'/store/customers',    icon:HiOutlineUsers,          label:'Customers' },
-    { to:'/store/dat',          icon:HiOutlineDatabase,       label:'DAT One' },
-    { to:'/store/payments',     icon:HiOutlineCreditCard,     label:'Payments' },
-    { to:'/store/dialers',      icon:HiOutlinePhone,          label:'Dialers' },
-    { to:'/store/expenses',     icon:HiOutlineCash,           label:'Expenses' },
-    { to:'/store/conflicts',    icon:HiOutlineExclamationCircle, label:'Sync Conflicts' },
-    { to:'/store/report',       icon:HiOutlineChartPie,       label:'Monthly Report' },
-    { divider:'System' },
-    { to:'/admin/activity',     icon:HiOutlineCollection,     label:'Audit Logs' },
-  ],
-  hr: [
-    { to:'/dashboard',          icon:HiOutlineHome,           label:'Dashboard' },
-    { to:'/hr/employees',       icon:RiTeamLine,              label:'Employees' },
-    { to:'/hr/leaves',          icon:HiOutlineClipboardList,  label:'Leaves' },
-    { to:'/attendance',         icon:HiOutlineClock,          label:'Attendance' },
-    { to:'/salary/manage',      icon:HiOutlineCurrencyDollar, label:'Manage Salary' },
-    { to:'/documents',          icon:HiOutlineDocumentText,   label:'Documents' },
-    // HR sees the additional-payments queue (forwarded claims) here.
-    { to:'/reimbursements',     icon:HiOutlineReceiptRefund,  label:'Additional Payments' },
-  ],
-  accountant: [
-    { to:'/dashboard',          icon:HiOutlineHome,           label:'Dashboard' },
-    { to:'/accounts/expenses',  icon:HiOutlineDocumentReport, label:'Expenses' },
-    { to:'/reimbursements',     icon:HiOutlineReceiptRefund,  label:'Reimbursements' },
-    { to:'/accounts/reports',   icon:HiOutlineChartPie,       label:'Reports' },
-  ],
-  employee: [
-    { to:'/dashboard',          icon:HiOutlineHome,           label:'Dashboard' },
-    { to:'/employee/leaves',    icon:HiOutlineClipboardList,  label:'My Leaves' },
-    { to:'/attendance',         icon:HiOutlineClock,          label:'Attendance' },
-    { to:'/employee/payslips',  icon:HiOutlineCurrencyDollar, label:'My Payslips' },
-    { to:'/reimbursements',     icon:HiOutlineReceiptRefund,  label:'My Reimbursements' },
-  ],
-  sales: [
-    { to:'/dashboard',          icon:HiOutlineHome,           label:'Dashboard' },
-    { to:'/attendance',         icon:HiOutlineClock,          label:'Attendance' },
-    { to:'/reimbursements',     icon:HiOutlineReceiptRefund,  label:'My Reimbursements' },
-    { divider:'DAT One Store' },
-    { to:'/store/customers',    icon:HiOutlineUsers,          label:'Customers' },
-    { to:'/store/dat',          icon:HiOutlineDatabase,       label:'DAT One' },
-    { to:'/store/payments',     icon:HiOutlineCreditCard,     label:'Payments' },
-    { to:'/store/dialers',      icon:HiOutlinePhone,          label:'Dialers' },
-    { to:'/store/expenses',     icon:HiOutlineCash,           label:'Expenses' },
-    { to:'/store/conflicts',    icon:HiOutlineExclamationCircle, label:'Sync Conflicts' },
-    { to:'/store/report',       icon:HiOutlineChartPie,       label:'Monthly Report' },
-  ],
-  customer: [
-    { to:'/dashboard',          icon:HiOutlineHome,           label:'Dashboard' },
-    { to:'/store/dat',          icon:HiOutlineDatabase,       label:'My DAT Seats' },
-    { to:'/store/dialers',      icon:HiOutlinePhone,          label:'My Dialers' },
-    { to:'/store/payments',     icon:HiOutlineCreditCard,     label:'My Payments' },
-  ],
-}
 
 const roleColors = {
   admin:      'bg-orange-500/15 text-orange-400',
@@ -146,12 +73,11 @@ function UserFooter({ user, onLogout }) {
   )
 }
 
-// Pending payment claims (existing)
+// ── Badge contexts (carried over) ─────────────────────────────────────────────
 const PendingCtx = createContext({ dat: 0, dialer: 0, total: 0 })
 export function usePendingClaims() { return useContext(PendingCtx) }
 const LeaveCtx = createContext({ pending: 0 })
 export function usePendingLeaves() { return useContext(LeaveCtx) }
-// ── NEW: pending reimbursement counts for badges ─────────────────────────
 const ReimbCtx = createContext({ finance: 0, hr: 0, mine: 0 })
 export function usePendingReimb() { return useContext(ReimbCtx) }
 
@@ -163,6 +89,7 @@ function NavList({ items, onNavigate }) {
   const reimb   = useContext(ReimbCtx)
   const { user } = useAuth()
   const role = user?.role
+
   return (
     <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5">
       {items.map((item, idx) => {
@@ -188,8 +115,11 @@ function NavList({ items, onNavigate }) {
           badgeStyle = { background:'rgba(249,115,22,0.18)', color:'#fb923c', border:'1px solid rgba(249,115,22,0.3)' }
         }
         if (isReimb) {
-          const n = (role === 'admin' || role === 'accountant') ? reimb.finance
-                  : role === 'hr' ? reimb.hr
+          // Pick the badge based on which queue the user is looking at, which
+          // we infer from their effective module — review > hr > own.
+          const mods = user?.modules || []
+          const n = mods.includes('reimbursements_review') ? reimb.finance
+                  : mods.includes('reimbursements_hr')     ? reimb.hr
                   : reimb.mine
           if (n > 0) {
             badge = n
@@ -197,7 +127,7 @@ function NavList({ items, onNavigate }) {
           }
         }
         return (
-          <NavLink key={item.to} to={item.to} onClick={onNavigate}
+          <NavLink key={item.to + ':' + item.label} to={item.to} onClick={onNavigate}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                 isActive
@@ -226,11 +156,14 @@ export default function Sidebar() {
   const [pending, setPending] = useState({ dat: 0, dialer: 0, total: 0 })
   const [pendingLeaves, setPendingLeaves] = useState({ pending: 0 })
   const [pendingReimb, setReimb]          = useState({ finance: 0, hr: 0, mine: 0 })
-  const items = navConfig[user?.role] || navConfig.employee
+
+  // Sidebar is now derived directly from the user's effective modules.
+  const items = useMemo(() => buildNavForUser(user?.modules || []), [user?.modules])
 
   const fetchPending = useCallback(async () => {
-    const roles = ['admin','sales','customer']
-    if (!user || !roles.includes(user.role)) return
+    // Only fetch the payment-claims badge if the user actually has the
+    // store_payments module — saves a wasted request for users that don't.
+    if (!user?.modules?.includes('store_payments')) return
     try {
       const [datRes, dialerRes] = await Promise.all([
         api.get('/store/payment-claims/?status=pending'),
@@ -243,8 +176,7 @@ export default function Sidebar() {
   }, [user])
 
   const fetchLeaveBadge = useCallback(async () => {
-    if (!user) return
-    if (user.role === 'sales' || user.role === 'customer' || user.role === 'accountant') return
+    if (!user?.modules?.includes('leaves_manage')) return
     try {
       const { data } = await api.get('/leaves/pending-count/')
       setPendingLeaves({ pending: Number(data?.count || 0) })
@@ -265,7 +197,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     fetchPending(); fetchLeaveBadge(); fetchReimbBadge()
-    const t1 = setInterval(fetchPending, 60_000)
+    const t1 = setInterval(fetchPending,    60_000)
     const t2 = setInterval(fetchLeaveBadge, 60_000)
     const t3 = setInterval(fetchReimbBadge, 60_000)
     return () => { clearInterval(t1); clearInterval(t2); clearInterval(t3) }

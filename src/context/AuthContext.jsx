@@ -32,14 +32,42 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  // ── Legacy feature check — kept so older pages that still call
+  // hasFeature('view_salary') keep working.
   const hasFeature = (feature) => {
     if (!user) return false
     if (user.role === 'admin') return true
     return user.features?.[feature] !== false
   }
 
+  // ── NEW: module check. The backend ships `user.modules` (an array of
+  // module slugs) on /users/me/. Admin always returns true as a safety net
+  // even if the array somehow shipped empty.
+  const hasModule = (slug) => {
+    if (!user) return false
+    if (user.role === 'admin') return true
+    const mods = user.modules
+    if (!Array.isArray(mods)) return false
+    return mods.includes(slug)
+  }
+
+  // Refresh the current user from the server. Useful after the admin grants
+  // a module to themself or any time `user.modules` may have changed.
+  const refreshUser = async () => {
+    try {
+      const { data } = await api.get('/users/me/')
+      setUser(data)
+      return data
+    } catch {
+      return null
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading, hasFeature }}>
+    <AuthContext.Provider value={{
+      user, login, logout, loading,
+      hasFeature, hasModule, refreshUser,
+    }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import api from '../../api/client'
 import toast from 'react-hot-toast'
 import {
   HiOutlineUserAdd, HiOutlineSearch, HiOutlinePencil,
   HiOutlineKey, HiOutlineX, HiOutlineCheck, HiOutlineChevronDown,
-  HiOutlineEye, HiOutlineEyeOff,
+  HiOutlineEye, HiOutlineEyeOff, HiOutlineRefresh,
 } from 'react-icons/hi'
+import { MODULES, SECTION_ORDER } from '../../utils/modules'
 
 const TEAL = '#f97316'
 
@@ -24,18 +25,8 @@ const ROLE_COLORS = {
   accountant: 'bg-emerald-500/20 text-emerald-400',
   employee:   'bg-sky-500/20 text-sky-400',
   sales:      'bg-orange-500/20 text-orange-400',
+  customer:   'bg-pink-500/20 text-pink-400',
 }
-
-const FEATURES = [
-  { key:'view_salary',     label:'View Salary' },
-  { key:'edit_profile',    label:'Edit Profile' },
-  { key:'view_reports',    label:'View Reports' },
-  { key:'manage_leaves',   label:'Manage Leaves' },
-  { key:'add_expenses',    label:'Add Expenses' },
-  { key:'view_sales',      label:'View Sales' },
-  { key:'export_data',     label:'Export Data' },
-  { key:'view_audit_logs', label:'View Audit Logs' },
-]
 
 function Toggle({ on, onChange }) {
   return (
@@ -88,13 +79,6 @@ function EditModal({ user, departments, onClose, onSave }) {
     } catch { toast.error('Failed to change password') }
   }
 
-  const handleFeatureToggle = async (key, val) => {
-    try {
-      await api.patch(`/users/${user.id}/features/`,{[key]:val})
-      toast.success('Feature updated')
-    } catch { toast.error('Failed') }
-  }
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
       <div className="glass-light rounded-3xl w-full max-w-2xl animate-slide-up my-4">
@@ -115,7 +99,7 @@ function EditModal({ user, departments, onClose, onSave }) {
 
         {/* Tabs */}
         <div className="flex border-b border-orange-500/10 px-6">
-          {[['info','Info'],['status','Employment'],['password','Password'],['features','Features']].map(([k,l])=>(
+          {[['info','Info'],['status','Employment'],['password','Password'],['perms','Permissions']].map(([k,l])=>(
             <button key={k} onClick={()=>setTab(k)}
               className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${tab===k?'text-[#f97316] border-orange-500':'text-slate-500 border-transparent hover:text-white'}`}>
               {l}
@@ -221,21 +205,194 @@ function EditModal({ user, departments, onClose, onSave }) {
             </div>
           )}
 
-          {tab==='features' && (
-            <div className="space-y-3">
-              <p className="text-slate-400 text-sm">Toggle features for this user. Admin always has full access.</p>
-              {FEATURES.map(feat=>(
-                <div key={feat.key} className="flex items-center justify-between p-3 glass rounded-xl">
-                  <span className="text-slate-300 text-sm">{feat.label}</span>
-                  <Toggle
-                    on={user.features?.[feat.key]!==false}
-                    onChange={()=>handleFeatureToggle(feat.key,user.features?.[feat.key]===false)}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+          {tab==='perms' && <PermissionsTab user={user}/>}
         </form>
+      </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Permissions tab — grouped checkboxes for every module in the registry,
+// with role-default hints and a single "Save Permissions" button. The body
+// of the tab is its own component so it can hold local state without rerunning
+// the parent form on every toggle.
+// ─────────────────────────────────────────────────────────────────────────────
+function PermissionsTab({ user }) {
+  // null = still loading
+  const [state, setState] = useState(null)
+  const [saving, setSaving] = useState(false)
+  const [resetting, setResetting] = useState(false)
+  // working copy of the effective set, edited locally until "Save"
+  const [draftEffective, setDraftEffective] = useState(new Set())
+
+  const isCustomer = user.role === 'customer'
+  const isAdminAcct = user.role === 'admin'
+
+  const load = async () => {
+    try {
+      const { data } = await api.get(`/users/${user.id}/modules/`)
+      setState(data)
+      setDraftEffective(new Set(data.effective || []))
+    } catch {
+      toast.error('Failed to load permissions')
+    }
+  }
+
+  useEffect(() => { load() /* eslint-disable-next-line */ }, [user.id])
+
+  // Group MODULES by section, preserving SECTION_ORDER.
+  const grouped = useMemo(() => {
+    const by = {}
+    for (const m of MODULES) {
+      if (!by[m.group]) by[m.group] = []
+      by[m.group].push(m)
+    }
+    return SECTION_ORDER
+      .filter(s => by[s]?.length)
+      .map(section => ({ section, items: by[section] }))
+  }, [])
+
+  const toggle = (slug) => {
+    setDraftEffective(prev => {
+      const next = new Set(prev)
+      if (next.has(slug)) next.delete(slug)
+      else next.add(slug)
+      return next
+    })
+  }
+
+  // Convert the draftEffective set into a payload the backend understands:
+  // for each known module slug, true = grant, false = revoke. The backend
+  // will strip rows that just match the role default, so this is fine.
+  const buildPayload = () => {
+    const overrides = {}
+    for (const m of MODULES) {
+      overrides[m.slug] = draftEffective.has(m.slug)
+    }
+    return { overrides }
+  }
+
+  const handleSave = async () => {
+    if (isAdminAcct) {
+      toast('Admin accounts always have full access — nothing to save.')
+      return
+    }
+    setSaving(true)
+    try {
+      const { data } = await api.put(`/users/${user.id}/modules/`, buildPayload())
+      setState(data)
+      setDraftEffective(new Set(data.effective || []))
+      toast.success('Permissions updated!')
+    } catch (err) {
+      const msg = err.response?.data?.error || 'Failed to save permissions'
+      const blocked = err.response?.data?.blocked
+      toast.error(blocked ? `${msg} (${blocked.join(', ')})` : msg)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleReset = async () => {
+    if (isAdminAcct) return
+    if (!window.confirm('Reset this user to their role defaults? Custom permissions will be cleared.')) return
+    setResetting(true)
+    try {
+      const { data } = await api.post(`/users/${user.id}/modules/reset/`)
+      setState(data)
+      setDraftEffective(new Set(data.effective || []))
+      toast.success('Reset to role defaults')
+    } catch {
+      toast.error('Failed to reset')
+    } finally {
+      setResetting(false)
+    }
+  }
+
+  if (!state) {
+    return <div className="text-center py-12 text-slate-500 text-sm">Loading permissions…</div>
+  }
+
+  const roleDefaults = new Set(state.role_defaults || [])
+  const dirty = (() => {
+    if (state.effective.length !== draftEffective.size) return true
+    for (const s of state.effective) if (!draftEffective.has(s)) return true
+    return false
+  })()
+
+  return (
+    <div className="space-y-4">
+      {/* Top banner — explains what's happening and the customer rule */}
+      <div className="p-3 glass rounded-xl text-sm">
+        <div className="text-white font-medium mb-1">
+          Role: <span className="capitalize">{state.role}</span>
+          {isAdminAcct && <span className="ml-2 text-orange-400 text-xs">(full access — cannot be changed)</span>}
+        </div>
+        <div className="text-slate-500 text-xs leading-relaxed">
+          Tick a box to grant a module to this user, untick to revoke. Highlighted
+          rows are the role's defaults — overrides on top of defaults are saved per-user.
+          {isCustomer && (
+            <span className="block mt-1 text-pink-300/80">
+              Customers are restricted to store-facing modules only — internal HR / Accounts / Admin
+              modules cannot be enabled on a customer account.
+            </span>
+          )}
+        </div>
+      </div>
+
+      {grouped.map(({ section, items }) => (
+        <div key={section} className="space-y-1">
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-600 px-1">{section}</div>
+          {items.map(m => {
+            const isDefault = roleDefaults.has(m.slug)
+            const checked   = draftEffective.has(m.slug)
+            const disabled  = isAdminAcct  // admins always full access
+            return (
+              <label key={m.slug}
+                className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${
+                  disabled ? 'opacity-60 cursor-not-allowed' : 'hover:bg-white/[0.03]'
+                }`}
+                style={{ background: 'rgba(255,255,255,0.02)' }}>
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 rounded accent-orange-500"
+                  checked={isAdminAcct ? true : checked}
+                  disabled={disabled}
+                  onChange={() => !disabled && toggle(m.slug)}
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="text-slate-200 text-sm font-medium truncate">{m.label}</div>
+                  <div className="text-slate-600 text-[11px] font-mono truncate">{m.slug}</div>
+                </div>
+                {isDefault && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full"
+                        style={{ background:'rgba(75,191,191,0.12)', color:'#5eead4', border:'1px solid rgba(75,191,191,0.2)' }}>
+                    role default
+                  </span>
+                )}
+              </label>
+            )
+          })}
+        </div>
+      ))}
+
+      {/* Sticky-ish footer */}
+      <div className="flex gap-3 pt-2">
+        <button
+          type="button"
+          onClick={handleReset}
+          disabled={resetting || saving || isAdminAcct}
+          className="flex-1 btn-ghost flex items-center justify-center gap-2 disabled:opacity-50">
+          <HiOutlineRefresh className="w-4 h-4"/>
+          {resetting ? 'Resetting…' : 'Reset to Role Defaults'}
+        </button>
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={!dirty || saving || isAdminAcct}
+          className="flex-1 btn-primary disabled:opacity-50">
+          {saving ? 'Saving…' : dirty ? 'Save Permissions' : 'No Changes'}
+        </button>
       </div>
     </div>
   )

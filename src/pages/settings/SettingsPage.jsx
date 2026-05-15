@@ -8,10 +8,12 @@ import {
   HiOutlineX, HiOutlineClock, HiOutlineCalendar, HiOutlineDatabase,
   HiOutlinePhone, HiOutlineEye, HiOutlineEyeOff, HiOutlineRefresh,
   HiOutlineCheck, HiOutlineWifi, HiOutlineCurrencyDollar,
+  HiOutlineShieldCheck,
 } from 'react-icons/hi'
 import BitnexLogo from '../../components/common/BitnexLogo'
 import SalarySetupTab from './SalarySetupTab'
 import LeaveAllowancesTab from './LeaveAllowancesTab'
+import PermissionsTab from './PermissionsTab'
 
 const TEAL = '#f97316'
 const inp = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-orange-500/50"
@@ -696,6 +698,7 @@ export default function SettingsPage() {
 
   const TABS = [
     { id:'profile',          icon:HiOutlineUser,           label:'Profile',          show: true },
+    { id:'permissions',      icon:HiOutlineShieldCheck,    label:'Permissions',      show: isAdmin },
     { id:'departments',      icon:HiOutlineOfficeBuilding, label:'Departments',      show: isAdmin },
     { id:'general',          icon:HiOutlineCog,            label:'General',          show: isAdmin },
     { id:'salary-setup',     icon:HiOutlineCurrencyDollar, label:'Salary Setup',     show: isHR },
@@ -735,6 +738,7 @@ export default function SettingsPage() {
       {/* Content */}
       <div className="flex-1 card min-w-0">
         {activeTab === 'profile'          && <ProfileTab/>}
+        {activeTab === 'permissions'      && isAdmin && <PermissionsTab/>}
         {activeTab === 'departments'      && isAdmin && <DepartmentsTab/>}
         {activeTab === 'general'          && isAdmin && <GeneralTab/>}
         {activeTab === 'salary-setup'     && isHR    && <SalarySetupTab/>}
