@@ -25,31 +25,41 @@ import ConflictsPage from './pages/store/ConflictsPage'
 import MonthlyReportPage from './pages/store/MonthlyReportPage'
 import CustomersPage from './pages/store/CustomersPage'
 import DialerSubscriptionsPage from './pages/store/DialerSubscriptionsPage'
+import OnboardingWizard from './pages/onboarding/OnboardingWizard'
+import OnboardingHRPage from './pages/onboarding/OnboardingHRPage'
 
-const TEAL = '#f97316'
+const TEAL = '#44BDB2'
 
 function ComingSoon({ title }) {
   return (
     <div className="flex flex-col items-center justify-center h-64 text-center">
       <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl"
-           style={{background:'linear-gradient(135deg,#f97316,#ea580c)'}}>🚧</div>
+           style={{background:`linear-gradient(135deg, ${TEAL}, #2f8a82)`}}>🚧</div>
       <h2 className="font-display text-2xl font-bold text-white mb-2">{title}</h2>
       <p className="text-slate-500">Coming soon...</p>
     </div>
   )
 }
 
-// Authenticated wrapper — used by the dashboard shell. The per-route module
-// gating is done inside via <ModuleGuard module="…">.
+// Statuses that mean "the user is mid-onboarding and should NOT see the app"
+const ONBOARDING_BLOCKING = new Set(['draft', 'submitted', 'changes_requested', 'pending_welcome'])
+
+function isOnboardingPending(user) {
+  if (!user || user.role !== 'employee') return false
+  return ONBOARDING_BLOCKING.has(user.onboarding_status)
+}
+
+// Authenticated wrapper — also redirects employees mid-onboarding to /onboarding.
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
   if (loading) return (
     <div className="min-h-screen hero-bg flex items-center justify-center">
       <div className="w-10 h-10 border-2 rounded-full animate-spin"
-           style={{borderColor:'rgba(75,191,191,0.2)',borderTopColor:TEAL}}/>
+           style={{borderColor:'rgba(68,189,178,0.2)',borderTopColor:TEAL}}/>
     </div>
   )
   if (!user) return <Navigate to="/login" replace/>
+  if (isOnboardingPending(user)) return <Navigate to="/onboarding" replace/>
   return children
 }
 
@@ -60,10 +70,27 @@ function WithUser({ children }) {
 
 function AppRoutes() {
   const { user } = useAuth()
+
+  // Decide where a logged-in user lands when they hit `/` or `/login`.
+  const loggedInLanding = user
+    ? (isOnboardingPending(user) ? '/onboarding' : '/dashboard')
+    : null
+
   return (
     <Routes>
-      <Route path="/" element={user ? <Navigate to="/dashboard"/> : <LandingPage/>}/>
-      <Route path="/login" element={user ? <Navigate to="/dashboard"/> : <LoginPage/>}/>
+      <Route path="/" element={user ? <Navigate to={loggedInLanding}/> : <LandingPage/>}/>
+      <Route path="/login" element={user ? <Navigate to={loggedInLanding}/> : <LoginPage/>}/>
+
+      {/* Onboarding lives outside the dashboard shell — full-screen wizard.
+          Only employees with a pending onboarding status reach it; everyone
+          else is bounced back. */}
+      <Route path="/onboarding" element={
+        !user
+          ? <Navigate to="/login" replace/>
+          : (user.role === 'employee' && isOnboardingPending(user))
+              ? <OnboardingWizard/>
+              : <Navigate to="/dashboard" replace/>
+      }/>
 
       <Route element={<ProtectedRoute><DashboardLayout/></ProtectedRoute>}>
         {/* Dashboard is unguarded by module (every authenticated user has it) */}
@@ -78,6 +105,8 @@ function AppRoutes() {
         {/* ── HR ────────────────────────────────────────────────────────── */}
         <Route path="/hr/employees"
           element={<ModuleGuard module="employees"><EmployeesPage/></ModuleGuard>}/>
+        <Route path="/hr/onboarding"
+          element={<ModuleGuard module="onboarding_review"><OnboardingHRPage/></ModuleGuard>}/>
         <Route path="/hr/leaves"
           element={<ModuleGuard module="leaves_manage"><LeaveManagementPage/></ModuleGuard>}/>
         <Route path="/hr/add-employee" element={<Navigate to="/hr/employees" replace/>}/>

@@ -16,6 +16,7 @@ import {
   HiOutlineDatabase, HiOutlineCreditCard, HiOutlinePhone,
   HiOutlineCash, HiOutlineChartPie, HiOutlineExclamationCircle,
   HiOutlineDocumentText, HiOutlineReceiptRefund,
+  HiOutlineUserAdd,
 } from 'react-icons/hi'
 import { RiTeamLine } from 'react-icons/ri'
 
@@ -33,6 +34,7 @@ export const MODULES = [
 
   // ── HR ────────────────────────────────────────────────────────────────────
   { slug:'employees',            label:'Employees',           group:'HR',            route:'/hr/employees',      icon:RiTeamLine },
+  { slug:'onboarding_review',    label:'Onboarding',          group:'HR',            route:'/hr/onboarding',     icon:HiOutlineUserAdd },
   { slug:'leaves_manage',        label:'Leaves',              group:'HR',            route:'/hr/leaves',         icon:HiOutlineClipboardList },
   { slug:'leaves_own',           label:'My Leaves',           group:'HR',            route:'/employee/leaves',   icon:HiOutlineClipboardList, hideIf:['leaves_manage'] },
   { slug:'attendance',           label:'Attendance',          group:'HR',            route:'/attendance',        icon:HiOutlineClock },

@@ -1,0 +1,79 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Onboarding wizard animations
+   Loaded only by the wizard so it doesn't bloat global CSS.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.ob-bg {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(at 20% 20%, rgba(68,189,178,0.18) 0%, transparent 50%),
+    radial-gradient(at 80% 30%, rgba(120,80,200,0.15) 0%, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(68,189,178,0.12) 0%, transparent 50%),
+    #0b0f17;
+  z-index: 0;
+}
+
+/* Soft floating bubbles in the backdrop */
+.ob-bubble {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.4;
+  animation: ob-float 14s ease-in-out infinite;
+}
+.ob-bubble.b1 { width:340px; height:340px; left:-60px;  top:10%;  background:#44BDB2; animation-delay: 0s; }
+.ob-bubble.b2 { width:260px; height:260px; right:5%;    top:50%;  background:#a78bfa; animation-delay: -4s; }
+.ob-bubble.b3 { width:200px; height:200px; left:30%;    bottom:-40px; background:#5eead4; animation-delay: -8s; }
+
+@keyframes ob-float {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(40px,-30px) scale(1.06); }
+  66%      { transform: translate(-30px,30px) scale(0.94); }
+}
+
+/* Slide-from-right entry */
+.ob-step-enter {
+  animation: ob-step-in 380ms cubic-bezier(.2,.8,.2,1);
+}
+@keyframes ob-step-in {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Soft pop for option cards */
+.ob-pop {
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.ob-pop:hover { transform: translateY(-2px); }
+.ob-pop:active { transform: translateY(0); }
+
+/* Pulse around the avatar circle in the welcome step */
+.ob-pulse {
+  animation: ob-pulse 2s ease-in-out infinite;
+}
+@keyframes ob-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(68,189,178,.55); }
+  50%      { box-shadow: 0 0 0 22px rgba(68,189,178,0); }
+}
+
+/* Confetti dots for the celebration screen */
+.ob-confetti {
+  position: absolute;
+  width: 10px; height: 14px;
+  top: -20px;
+  animation: ob-confetti-fall linear infinite;
+}
+@keyframes ob-confetti-fall {
+  to { transform: translateY(110vh) rotate(720deg); }
+}
+
+/* Step progress dot */
+.ob-dot { transition: all .25s ease; }
+.ob-dot.done { background:#44BDB2; }
+.ob-dot.active {
+  background:#44BDB2;
+  box-shadow: 0 0 0 6px rgba(68,189,178,0.18);
+  transform: scale(1.2);
+}
+.ob-dot.pending { background:rgba(255,255,255,0.12); }

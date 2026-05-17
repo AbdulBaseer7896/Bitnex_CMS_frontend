@@ -7,6 +7,7 @@ import {
   HiOutlineEye, HiOutlineEyeOff, HiOutlineRefresh,
 } from 'react-icons/hi'
 import { MODULES, SECTION_ORDER } from '../../utils/modules'
+import { useAuth } from '../../context/AuthContext'
 
 const TEAL = '#f97316'
 
@@ -407,6 +408,7 @@ const EMPTY_FORM = {
 }
 
 export default function UsersPage() {
+  const { user: me } = useAuth()
   const [users, setUsers]           = useState([])
   const [departments, setDepts]     = useState([])
   const [search, setSearch]         = useState('')
@@ -417,7 +419,11 @@ export default function UsersPage() {
   const [form, setForm]             = useState(EMPTY_FORM)
   const [showPwd, setShowPwd]       = useState(false)
 
-  useEffect(()=>{ fetchUsers(); fetchDepts() },[])
+  // Roles the CURRENT logged-in user is allowed to create.
+  // Admin: everyone except admin. HR: whatever admin set in Settings.
+  const [allowedRoles, setAllowedRoles] = useState([])
+
+  useEffect(()=>{ fetchUsers(); fetchDepts(); fetchCreatableRoles() },[me?.role])
 
   const fetchUsers = async()=>{
     setLoading(true)
@@ -429,6 +435,34 @@ export default function UsersPage() {
     try{ const{data}=await api.get('/core/departments/'); setDepts(data.results||data) }
     catch{}
   }
+
+  const fetchCreatableRoles = async () => {
+    if (me?.role === 'admin') {
+      // Admin can create everyone except other admins
+      setAllowedRoles(['hr', 'accountant', 'employee', 'sales', 'customer'])
+      return
+    }
+    if (me?.role === 'hr') {
+      try {
+        const { data } = await api.get('/core/company-settings/')
+        const policy = (data.hr_creatable_roles || [])
+          .filter(r => r !== 'admin' && r !== 'hr')   // hard guard
+        setAllowedRoles(policy)
+      } catch {
+        setAllowedRoles([])
+      }
+      return
+    }
+    setAllowedRoles([])
+  }
+
+  // When Add modal opens, ensure the pre-selected role is one the user is
+  // actually allowed to create. Prevents a 403 on submit due to a stale default.
+  useEffect(() => {
+    if (showAddModal && allowedRoles.length && !allowedRoles.includes(form.role)) {
+      setForm(p => ({ ...p, role: allowedRoles[0] }))
+    }
+  }, [showAddModal, allowedRoles])
 
   const handleAddUser = async(e)=>{
     e.preventDefault()
@@ -469,9 +503,11 @@ export default function UsersPage() {
             <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search users..."
               className="input pl-9 py-2 text-sm w-52"/>
           </div>
-          <button onClick={()=>setShowAddModal(true)} className="btn-primary flex items-center gap-2 text-sm px-4 py-2.5">
-            <HiOutlineUserAdd className="w-4 h-4"/>Add User
-          </button>
+          {allowedRoles.length > 0 && (
+            <button onClick={()=>setShowAddModal(true)} className="btn-primary flex items-center gap-2 text-sm px-4 py-2.5">
+              <HiOutlineUserAdd className="w-4 h-4"/>Add User
+            </button>
+          )}
         </div>
       </div>
 
@@ -594,11 +630,18 @@ export default function UsersPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="block text-xs text-slate-400 mb-1.5">Role *</label>
-                  <select className="input" value={form.role} onChange={e=>f('role',e.target.value)}>
-                    {['admin','hr','accountant','employee','sales'].map(r=>(
-                      <option key={r} value={r} className="bg-slate-900 capitalize">{r}</option>
-                    ))}
-                  </select></div>
+                  {allowedRoles.length === 0 ? (
+                    <div className="input flex items-center text-rose-300 text-sm">
+                      You don't have permission to create users.
+                    </div>
+                  ) : (
+                    <select className="input" value={form.role} onChange={e=>f('role',e.target.value)}>
+                      {allowedRoles.map(r=>(
+                        <option key={r} value={r} className="bg-slate-900 capitalize">{r}</option>
+                      ))}
+                    </select>
+                  )}
+                </div>
                 <div><label className="block text-xs text-slate-400 mb-1.5">Department</label>
                   <select className="input" value={form.department} onChange={e=>f('department',e.target.value)}>
                     <option value="" className="bg-slate-900">-- Select Department --</option>

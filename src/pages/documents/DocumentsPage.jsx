@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { createRoot } from 'react-dom/client'
 import toast from 'react-hot-toast'
 import {
   HiOutlineSearch, HiOutlineDocumentText, HiOutlineUserCircle,
@@ -8,7 +9,8 @@ import {
 import api from '../../api/client'
 import { DOC_TYPES, DOC_LABEL } from './documentTemplates'
 import DocumentGeneratorModal from './DocumentGeneratorModal'
-import LetterPreview from './LetterPreview'
+import LetterPreview, { LetterHeader, LetterBody, LetterFooter } from './LetterPreview'
+import { downloadLetterPDF, buildFilename } from './pdfGenerator'
 
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'
 const fmtDT   = (d) => d ? new Date(d).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'
@@ -79,18 +81,36 @@ export default function DocumentsPage() {
     } catch { toast.error('Failed to delete') }
   }
 
-  const handleReprint = (doc) => {
-    setReprint(doc)
-    setTimeout(() => {
-      document.body.classList.add('printing-letter')
-      setTimeout(() => {
-        window.print()
-        setTimeout(() => {
-          document.body.classList.remove('printing-letter')
-          setReprint(null)
-        }, 300)
-      }, 80)
-    }, 50)
+  const handleReprint = async (doc) => {
+    const filename = buildFilename(
+      doc.employee_name || doc.full_name || 'document',
+      doc.doc_type,
+    )
+    const toastId = toast.loading('Generating PDF…')
+    try {
+      await downloadLetterPDF({
+        filename,
+        renderHeader: (host) => new Promise((resolve) => {
+          const root = createRoot(host)
+          root.render(<LetterHeader/>)
+          requestAnimationFrame(() => requestAnimationFrame(resolve))
+        }),
+        renderBody: (host) => new Promise((resolve) => {
+          const root = createRoot(host)
+          root.render(<LetterBody doc={doc} forPdf/>)
+          requestAnimationFrame(() => requestAnimationFrame(resolve))
+        }),
+        renderFooter: (host, pageNum, totalPages) => new Promise((resolve) => {
+          const root = createRoot(host)
+          root.render(<LetterFooter pageNum={pageNum} totalPages={totalPages}/>)
+          requestAnimationFrame(() => requestAnimationFrame(resolve))
+        }),
+      })
+      toast.success('PDF downloaded', { id: toastId })
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to generate PDF', { id: toastId })
+    }
   }
 
   return (
@@ -255,13 +275,12 @@ export default function DocumentsPage() {
                               <td className="px-4 py-3 text-slate-400 text-xs">{d.generated_by_name || '—'}</td>
                               <td className="px-4 py-3 text-right">
                                 <div className="flex justify-end gap-1">
-                                  <button onClick={() => handleReprint(d)} title="Download / Print"
-                                    className="p-1.5 rounded-lg text-slate-400 hover:text-orange-400 hover:bg-orange-500/10">
+                                  <button onClick={() => handleReprint(d)} title="Download PDF"
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-white"
+                                    style={{ }}
+                                    onMouseEnter={e => { e.currentTarget.style.color = '#44BDB2'; e.currentTarget.style.background = 'rgba(68,189,178,0.1)' }}
+                                    onMouseLeave={e => { e.currentTarget.style.color = ''; e.currentTarget.style.background = '' }}>
                                     <HiOutlineDownload className="w-4 h-4"/>
-                                  </button>
-                                  <button onClick={() => handleReprint(d)} title="Reprint"
-                                    className="p-1.5 rounded-lg text-slate-400 hover:text-orange-400 hover:bg-orange-500/10">
-                                    <HiOutlinePrinter className="w-4 h-4"/>
                                   </button>
                                   <button onClick={() => handleDelete(d.id)} title="Delete"
                                     className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10">
